@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taiya's Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        black: '#000000',
+                        white: '#ffffff',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-black dark:bg-black dark:text-white min-h-screen transition-colors duration-200 flex flex-col">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="border-b border-black dark:border-white p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <button onclick="navigate('home')" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Home</button>
+            <span id="currentUserDisplay" class="text-sm font-medium">Not signed in</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="navigate('profile')" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Profile</button>
+            <button onclick="navigate('settings')" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Settings</button>
+            <button onclick="logoutUser()" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Log Out</button>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-grow p-6 max-w-5xl mx-auto w-full">
+
+        <!-- 1. AUTHENTICATION VIEW -->
+        <section id="view-auth" class="view max-w-md mx-auto mt-12 border border-black dark:border-white p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center uppercase tracking-wider">Sign In / Register</h2>
+            <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm mb-1">Name</label>
+                    <input type="text" id="authName" required class="w-full border border-black dark:border-white bg-transparent p-2 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Email</label>
+                    <input type="email" id="authEmail" required class="w-full border border-black dark:border-white bg-transparent p-2 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Password</label>
+                    <input type="password" id="authPassword" required class="w-full border border-black dark:border-white bg-transparent p-2 focus:outline-none">
+                </div>
+                <div class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" id="rememberMe" class="border border-black dark:border-white">
+                    <label for="rememberMe">Keep sign in for next time?</label>
+                </div>
+                <button type="submit" class="w-full border border-black dark:border-white py-2 font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Sign In / Register</button>
+            </form>
+        </section>
+
+        <!-- 2. HOME VIEW -->
+        <section id="view-home" class="view hidden space-y-6">
+            <h1 class="text-3xl font-extrabold uppercase tracking-tight text-center mb-8">Taiya's Portal</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button onclick="navigate('phone-time')" class="border-2 border-black dark:border-white p-8 text-xl font-bold uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center">Taiya's Phone Time</button>
+                <button onclick="navigate('extra-rewards')" class="border-2 border-black dark:border-white p-8 text-xl font-bold uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center">Taiya's Extra Rewards</button>
+                <button onclick="navigate('owed-credit')" class="border-2 border-black dark:border-white p-8 text-xl font-bold uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center">Taiya's Owed Credit</button>
+                <button onclick="navigate('calendar')" class="border-2 border-black dark:border-white p-8 text-xl font-bold uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center">Calendar</button>
+            </div>
+        </section>
+
+        <!-- 3. TAIYA'S PHONE TIME VIEW -->
+        <section id="view-phone-time" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">Taiya's Phone Time</h2>
+            <!-- TIMER COMPONENT -->
+            <div class="border border-black dark:border-white p-6 space-y-4">
+                <div class="text-4xl font-mono text-center tracking-widest" id="timer-display-phone">00:00:00</div>
+                <div class="flex justify-center space-x-2">
+                    <input type="number" id="timer-h" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <input type="number" id="timer-m" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <input type="number" id="timer-s" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <button onclick="startCustomTimer('phone')" class="border border-black dark:border-white px-4 py-1 text-sm font-bold">Start Custom</button>
+                </div>
+                <!-- Quick Options -->
+                <div class="flex flex-wrap justify-center gap-2 pt-2">
+                    <button onclick="startQuickTimer(15, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">2 Hours</button>
+                    <button onclick="cancelTimer('phone')" class="border border-black dark:border-white px-3 py-1 text-xs bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                </div>
+            </div>
+            <!-- LIST COMPONENT -->
+            <div class="border border-black dark:border-white p-6 space-y-4">
+                <h3 class="font-bold uppercase">Earn Time (Tasks & Reward)</h3>
+                <div id="list-container-phone" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
+                <div id="admin-controls-phone" class="hidden space-y-2">
+                    <button onclick="addListRow('phone')" class="border border-black dark:border-white px-4 py-1 text-sm">+ Add Line</button>
+                    <button onclick="saveList('phone')" class="border border-black dark:border-white px-4 py-1 text-sm">Save List</button>
+                    <button onclick="promptDeleteList('phone')" class="border border-black dark:border-white px-4 py-1 text-sm">Delete/Clear List</button>
+                </div>
+                <!-- Live Task Status Box -->
+                <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-phone">
+                    No tasks being done right now
+                </div>
+                <button onclick="navigate('history-phone')" class="text-xs underline block mt-2">View History</button>
+            </div>
+            <!-- Active Users Moderation List -->
+            <div class="border border-black dark:border-white p-4">
+                <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users (Admin Moderation)</h4>
+                <div id="user-moderation-list" class="space-y-1 text-sm"></div>
+            </div>
+        </section>
+
+        <!-- 4. TAIYA'S EXTRA REWARDS VIEW -->
+        <section id="view-extra-rewards" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">Taiya's Extra Rewards</h2>
+            <!-- TIMER COMPONENT -->
+            <div class="border border-black dark:border-white p-6 space-y-4">
+                <div class="text-4xl font-mono text-center tracking-widest" id="timer-display-rewards">00:00:00</div>
+                <div class="flex justify-center space-x-2">
+                    <input type="number" id="timer-h-r" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <input type="number" id="timer-m-r" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <input type="number" id="timer-s-r" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <button onclick="startCustomTimer('rewards')" class="border border-black dark:border-white px-4 py-1 text-sm font-bold">Start Custom</button>
+                </div>
+                <div class="flex flex-wrap justify-center gap-2 pt-2">
+                    <button onclick="startQuickTimer(15, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">2 Hours</button>
+                    <button onclick="cancelTimer('rewards')" class="border border-black dark:border-white px-3 py-1 text-xs bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                </div>
+            </div>
+            <!-- LIST COMPONENT -->
+            <div class="border border-black dark:border-white p-6 space-y-4">
+                <h3 class="font-bold uppercase">Rewards List</h3>
+                <div id="list-container-rewards" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
+                <div id="admin-controls-rewards" class="hidden space-y-2">
+                    <button onclick="addListRow('rewards')" class="border border-black dark:border-white px-4 py-1 text-sm">+ Add Line</button>
+                    <button onclick="saveList('rewards')" class="border border-black dark:border-white px-4 py-1 text-sm">Save List</button>
+                    <button onclick="promptDeleteList('rewards')" class="border border-black dark:border-white px-4 py-1 text-sm">Delete/Clear List</button>
+                </div>
+                <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-rewards">No tasks being done right now</div>
+                <button onclick="navigate('history-rewards')" class="text-xs underline block mt-2">View History</button>
+            </div>
+            <div class="border border-black dark:border-white p-4">
+                <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users</h4>
+                <div id="user-moderation-list-2" class="space-y-1 text-sm"></div>
+            </div>
+        </section>
+
+        <!-- 5. TAIYA'S OWED CREDIT VIEW -->
+        <section id="view-owed-credit" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">Taiya's Owed Credit</h2>
+            <!-- TIMER COMPONENT -->
+            <div class="border border-black dark:border-white p-6 space-y-4">
+                <div class="text-4xl font-mono text-center tracking-widest" id="timer-display-credit">00:00:00</div>
+                <div class="flex justify-center space-x-2">
+                    <input type="number" id="timer-h-c" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <input type="number" id="timer-m-c" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <input type="number" id="timer-s-c" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
+                    <button onclick="startCustomTimer('credit')" class="border border-black dark:border-white px-4 py-1 text-sm font-bold">Start Custom</button>
+                </div>
+                <div class="flex flex-wrap justify-center gap-2 pt-2">
+                    <button onclick="startQuickTimer(15, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">2 Hours</button>
+                    <button onclick="cancelTimer('credit')" class="border border-black dark:border-white px-3 py-1 text-xs bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                </div>
+            </div>
+            <!-- CHECKLIST COMPONENT -->
+            <div class="border border-black dark:border-white p-6 space-y-4">
+                <h3 class="font-bold uppercase">Owed Time Checklist</h3>
+                <div id="list-container-credit" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
+                <div id="admin-controls-credit" class="hidden space-y-2">
+                    <button onclick="addListRow('credit')" class="border border-black dark:border-white px-4 py-1 text-sm">+ Add Line</button>
+                    <button onclick="saveList('credit')" class="border border-black dark:border-white px-4 py-1 text-sm">Save Checklist</button>
+                    <button onclick="promptDeleteList('credit')" class="border border-black dark:border-white px-4 py-1 text-sm">Delete/Clear List</button>
+                </div>
+                <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-credit">No tasks being done right now</div>
+                <button onclick="navigate('history-credit')" class="text-xs underline block mt-2">View History</button>
+            </div>
+            <div class="border border-black dark:border-white p-4">
+                <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users</h4>
+                <div id="user-moderation-list-3" class="space-y-1 text-sm"></div>
+            </div>
+        </section>
+
+        <!-- 6. CALENDAR VIEW -->
+        <section id="view-calendar" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">Weekly Calendar (Timer Time Log)</h2>
+            <div class="border border-black dark:border-white p-6">
+                <div id="weekly-calendar-grid" class="grid grid-cols-1 md:grid-cols-7 gap-4 text-center font-mono"></div>
+            </div>
+        </section>
+
+        <!-- 7. SETTINGS VIEW -->
+        <section id="view-settings" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">Settings</h2>
+            <div class="border border-black dark:border-white p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span>Theme Mode (Black / White)</span>
+                    <button onclick="toggleTheme()" class="border border-black dark:border-white px-4 py-1 text-sm font-bold">Toggle Dark/Light</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. PROFILE VIEW -->
+        <section id="view-profile" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">User Profile</h2>
+            <div class="border border-black dark:border-white p-6 space-y-4">
+                <div>
+                    <p class="text-sm">Email: <span id="profileEmailDisplay"></span></p>
+                    <p class="text-sm">Name: <span id="profileNameDisplay"></span></p>
+                    <p class="text-sm">Role: <span id="profileRoleDisplay"></span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY VIEWS -->
+        <section id="view-history-phone" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">Phone Time History & Recovery</h2>
+            <div class="border border-black dark:border-white p-6 space-y-4" id="history-content-phone"></div>
+            <button onclick="navigate('phone-time')" class="border border-black dark:border-white px-4 py-1 text-sm">Back</button>
+        </section>
+        <section id="view-history-rewards" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">Rewards History & Recovery</h2>
+            <div class="border border-black dark:border-white p-6 space-y-4" id="history-content-rewards"></div>
+            <button onclick="navigate('extra-rewards')" class="border border-black dark:border-white px-4 py-1 text-sm">Back</button>
+        </section>
+        <section id="view-history-credit" class="view hidden space-y-6">
+            <h2 class="text-2xl font-bold uppercase">Credit History & Recovery</h2>
+            <div class="border border-black dark:border-white p-6 space-y-4" id="history-content-credit"></div>
+            <button onclick="navigate('owed-credit')" class="border border-black dark:border-white px-4 py-1 text-sm">Back</button>
+        </section>
+
+    </main>
+
+    <!-- FIREBASE & APP LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHWrffw_X6uD__L0FbVH2jzKjFG4wWWz0",
+            authDomain: "tb-reward-systm.firebaseapp.com",
+            projectId: "tb-reward-systm",
+            storageBucket: "tb-reward-systm.firebasestorage.app",
+            messagingSenderId: "37186994166",
+            appId: "1:37186994166:web:4c84f9733ac1b5b7fe51d7",
+            measurementId: "G-CXJ4EMMX4V"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
+
+        let currentUserData = null;
+        let activeTimers = {};
+
+        window.navigate = function(viewName) {
+            document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(`view-${viewName}`);
+            if (target) target.classList.remove('hidden');
+            if (viewName === 'calendar') loadCalendar();
+        };
+
+        window.toggleTheme = function() {
+            document.documentElement.classList.toggle('dark');
+        };
+
+        // Authentication Handler
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('authName').value;
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+
+            try {
+                let res;
+                try {
+                    res = await signInWithEmailAndPassword(auth, email, password);
+                } catch {
+                    res = await createUserWithEmailAndPassword(auth, email, password);
+                    const userDocRef = doc(db, "users", res.user.uid);
+                    const allUsers = await getDocs(collection(db, "users"));
+                    const isAdmin = allUsers.size === 0; // First user becomes admin automatically
+                    await setDoc(userDocRef, { name, email, role: isAdmin ? 'admin' : 'user', status: 'active' });
+                }
+                navigate('home');
+            } catch (err) {
+                alert("Auth Error: " + err.message);
+            }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    currentUserData = { uid: user.uid, ...userDoc.data() };
+                    document.getElementById('currentUserDisplay').innerText = `${currentUserData.name} (${currentUserData.role})` ;
+                    document.getElementById('profileEmailDisplay').innerText = currentUserData.email;
+                    document.getElementById('profileNameDisplay').innerText = currentUserData.name;
+                    document.getElementById('profileRoleDisplay').innerText = currentUserData.role;
+
+                    if (currentUserData.role === 'admin') {
+                        ['phone', 'rewards', 'credit'].forEach(p => document.getElementById(`admin-controls-${p}`).classList.remove('hidden'));
+                    }
+                    loadListData('phone');
+                    loadListData('rewards');
+                    loadListData('credit');
+                    loadUsersList();
+                }
+            } else {
+                navigate('auth');
+            }
+        });
+
+        window.logoutUser = async function() {
+            await signOut(auth);
+            navigate('auth');
+        };
+
+        // Timer Implementation with 24h limit and quick options
+        window.startQuickTimer = function(minutes, pageKey) {
+            startCountdown(minutes * 60, pageKey);
+        };
+
+        window.startCustomTimer = function(pageKey) {
+            const h = parseInt(document.getElementById(`timer-h${pageKey === 'phone' ? '' : '-' + pageKey[0]}`).value) || 0;
+            const m = parseInt(document.getElementById(`timer-m${pageKey === 'phone' ? '' : '-' + pageKey[0]}`).value) || 0;
+            const s = parseInt(document.getElementById(`timer-s${pageKey === 'phone' ? '' : '-' + pageKey[0]}`).value) || 0;
+            const totalSecs = (h * 3600) + (m * 60) + s;
+            if (totalSecs > 86400) { alert("Limit is 24 hours."); return; }
+            startCountdown(totalSecs, pageKey);
+        };
+
+        function startCountdown(durationSecs, pageKey) {
+            if (activeTimers[pageKey]) clearInterval(activeTimers[pageKey]);
+            let remaining = durationSecs;
+            const display = document.getElementById(`timer-display-${pageKey}`);
+            
+            activeTimers[pageKey] = setInterval(() => {
+                const h = String(Math.floor(remaining / 3600)).padStart(2, '0');
+                const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+                const s = String(remaining % 60).padStart(2, '0');
+                display.innerText = `${h}:${m}:${s}`;
+
+                if (remaining <= 0) {
+                    clearInterval(activeTimers[pageKey]);
+                    logTimeToCalendar(durationSecs);
+                    alert("Timer finished!");
+                }
+                remaining--;
+            }, 1000);
+        }
+
+        window.cancelTimer = function(pageKey) {
+            if (activeTimers[pageKey]) clearInterval(activeTimers[pageKey]);
+            document.getElementById(`timer-display-${pageKey}`).innerText = "00:00:00";
+        };
+
+        async function logTimeToCalendar(seconds) {
+            const today = new Date().toISOString().split('T')[0];
+            const ref = doc(db, "calendar", today);
+            const snap = await getDoc(ref);
+            const existing = snap.exists() ? snap.data().totalSeconds : 0;
+            await setDoc(ref, { totalSeconds: existing + seconds }, { merge: true });
+        }
+
+        async function loadCalendar() {
+            const grid = document.getElementById('weekly-calendar-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                const snap = await getDoc(doc(db, "calendar", dateStr));
+                const secs = snap.exists() ? snap.data().totalSeconds : 0;
+                const hrs = (secs / 3600).toFixed(1);
+                
+                const box = document.createElement('div');
+                box.className = "border border-black dark:border-white p-4";
+                box.innerHTML = `<div class="font-bold">${dateStr}</div><div>${hrs} Hours</div>`;
+                grid.appendChild(box);
+            }
+        }
+
+        // Dynamic Lists & Tasks Workflow
+        window.addListRow = function(pageKey, taskText = '', rewardText = '', completed = false) {
+            const container = document.getElementById(`list-container-${pageKey}`);
+            const row = document.createElement('div');
+            row.className = `flex items-center justify-between p-2 ${completed ? 'bg-gray-300 dark:bg-gray-800 text-gray-500' : ''}`;
+            row.innerHTML = `
+                <div class="flex items-center space-x-2 w-full">
+                    ${pageKey === 'credit' ? `<input type="checkbox" class="task-check" ${completed ? 'checked' : ''}>` : '<span class="bullet">•</span>'}
+                    <input type="text" value="${taskText}" placeholder="Task description" class="task-input bg-transparent border-b border-black dark:border-white w-1/2 p-1" ${currentUserData?.role !== 'admin' ? 'readonly' : ''}>
+                    <input type="text" value="${rewardText}" placeholder="Reward / Owed Time" class="reward-input bg-transparent border-b border-black dark:border-white w-1/3 p-1" ${currentUserData?.role !== 'admin' ? 'readonly' : ''}>
+                </div>
+                <div class="flex space-x-1">
+                    <button onclick="startTask(this, '${pageKey}')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Start</button>
+                    <button onclick="deleteRow(this)" class="border border-black dark:border-white px-2 py-0.5 text-xs">Delete</button>
+                </div>
+            `;
+            container.appendChild(row);
+        };
+
+        window.deleteRow = function(btn) {
+            btn.closest('div.flex').parentElement.remove();
+        };
+
+        window.startTask = function(btn, pageKey) {
+            const row = btn.closest('div.flex').parentElement;
+            const taskInput = row.querySelector('.task-input').value;
+            document.getElementById(`status-box-${pageKey}`).innerHTML = `
+                <div>Task in process: <strong>${taskInput}</strong></div>
+                <button onclick="completeTask(this, '${pageKey}')" class="mt-2 border border-black dark:border-white px-3 py-1 text-xs">Complete?</button>
+            `;
+        };
+
+        window.completeTask = function(btn, pageKey) {
+            const statusBox = document.getElementById(`status-box-${pageKey}`);
+            statusBox.innerText = "No tasks being done right now";
+        };
+
+        window.saveList = async function(pageKey) {
+            const rows = document.querySelectorAll(`#list-container-${pageKey} > div`);
+            const data = Array.from(rows).map(r => ({
+                task: r.querySelector('.task-input')?.value || '',
+                reward: r.querySelector('.reward-input')?.value || '',
+                completed: r.querySelector('.task-check')?.checked || false
+            }));
+            await setDoc(doc(db, "lists", pageKey), { items: data });
+            alert("List saved successfully!");
+        };
+
+        async function loadListData(pageKey) {
+            const snap = await getDoc(doc(db, "lists", pageKey));
+            const container = document.getElementById(`list-container-${pageKey}`);
+            container.innerHTML = '';
+            if (snap.exists()) {
+                snap.data().items.forEach(i => addListRow(pageKey, i.task, i.reward, i.completed));
+            }
+        }
+
+        window.promptDeleteList = async function(pageKey) {
+            if (confirm("By deleting this, this will clear the whole list, not delete the list. You can recover this in your history.")) {
+                const snap = await getDoc(doc(db, "lists", pageKey));
+                if (snap.exists()) {
+                    await addDoc(collection(db, "history"), { pageKey, items: snap.data().items, timestamp: new Date() });
+                }
+                await setDoc(doc(db, "lists", pageKey), { items: [] });
+                loadListData(pageKey);
+                alert("List cleared and moved to history.");
+            }
+        };
+
+        async function loadUsersList() {
+            const snap = await getDocs(collection(db, "users"));
+            ['user-moderation-list', 'user-moderation-list-2', 'user-moderation-list-3'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.innerHTML = '';
+                snap.forEach(docSnap => {
+                    const u = docSnap.data();
+                    const row = document.createElement('div');
+                    row.className = "flex justify-between items-center";
+                    row.innerHTML = `<span>${u.name} (${u.role})</span>`;
+                    if (currentUserData?.role === 'admin' && u.email !== currentUserData.email) {
+                        row.innerHTML += `<button onclick="kickUser('${docSnap.id}')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Kick/Ban</button>`;
+                    }
+                    el.appendChild(row);
+                });
+            });
+        }
+
+        window.kickUser = async function(uid) {
+            await deleteDoc(doc(db, "users", uid));
+            loadUsersList();
+        };
+    </script>
+</body>
+</html>
