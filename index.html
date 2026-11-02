@@ -22,15 +22,12 @@
 </head>
 <body class="bg-white text-black dark:bg-black dark:text-white min-h-screen transition-colors duration-200 flex flex-col">
 
-    <!-- TOP NAVIGATION BAR -->
+    <!-- TOP NAVIGATION BAR (Sign-in text removed) -->
     <header class="border-b border-black dark:border-white p-4 flex justify-between items-center">
         <div class="flex items-center space-x-4">
             <button onclick="navigate('home')" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Home</button>
-            <span id="currentUserDisplay" class="text-sm font-medium">Not signed in</span>
         </div>
-        <div class="flex items-center space-x-3">
-            <button onclick="navigate('profile')" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Profile</button>
-            <button onclick="navigate('settings')" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Settings</button>
+        <div>
             <button onclick="logoutUser()" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Log Out</button>
         </div>
     </header>
@@ -104,7 +101,6 @@
                     <button onclick="saveList('phone')" class="border border-black dark:border-white px-4 py-1 text-sm">Save List</button>
                     <button onclick="promptDeleteList('phone')" class="border border-black dark:border-white px-4 py-1 text-sm">Delete/Clear List</button>
                 </div>
-                <!-- Live Task Status Box -->
                 <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-phone">
                     No tasks being done right now
                 </div>
@@ -203,29 +199,6 @@
             </div>
         </section>
 
-        <!-- 7. SETTINGS VIEW -->
-        <section id="view-settings" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">Settings</h2>
-            <div class="border border-black dark:border-white p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <span>Theme Mode (Black / White)</span>
-                    <button onclick="toggleTheme()" class="border border-black dark:border-white px-4 py-1 text-sm font-bold">Toggle Dark/Light</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. PROFILE VIEW -->
-        <section id="view-profile" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">User Profile</h2>
-            <div class="border border-black dark:border-white p-6 space-y-4">
-                <div>
-                    <p class="text-sm">Email: <span id="profileEmailDisplay"></span></p>
-                    <p class="text-sm">Name: <span id="profileNameDisplay"></span></p>
-                    <p class="text-sm">Role: <span id="profileRoleDisplay"></span></p>
-                </div>
-            </div>
-        </section>
-
         <!-- HISTORY VIEWS -->
         <section id="view-history-phone" class="view hidden space-y-6">
             <h2 class="text-2xl font-bold uppercase">Phone Time History & Recovery</h2>
@@ -270,15 +243,15 @@
         let currentUserData = null;
         let activeTimers = {};
 
+        // YOUR EXACT ADMIN EMAIL
+        const MAIN_ADMIN_EMAIL = "taiyaberman4@gmail.com"; 
+
         window.navigate = function(viewName) {
             document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById(`view-${viewName}`);
             if (target) target.classList.remove('hidden');
             if (viewName === 'calendar') loadCalendar();
-        };
-
-        window.toggleTheme = function() {
-            document.documentElement.classList.toggle('dark');
+            if (viewName.startsWith('history-')) loadHistoryData(viewName.replace('history-', ''));
         };
 
         // Authentication Handler
@@ -294,11 +267,22 @@
                     res = await signInWithEmailAndPassword(auth, email, password);
                 } catch {
                     res = await createUserWithEmailAndPassword(auth, email, password);
-                    const userDocRef = doc(db, "users", res.user.uid);
-                    const allUsers = await getDocs(collection(db, "users"));
-                    const isAdmin = allUsers.size === 0; // First user becomes admin automatically
-                    await setDoc(userDocRef, { name, email, role: isAdmin ? 'admin' : 'user', status: 'active' });
                 }
+                
+                const userDocRef = doc(db, "users", res.user.uid);
+                const userSnap = await getDoc(userDocRef);
+                
+                let role = 'user';
+                if (email.toLowerCase() === MAIN_ADMIN_EMAIL.toLowerCase()) {
+                    role = 'admin';
+                } else if (userSnap.exists()) {
+                    role = userSnap.data().role;
+                } else {
+                    const allUsers = await getDocs(collection(db, "users"));
+                    if (allUsers.size === 0) role = 'admin';
+                }
+
+                await setDoc(userDocRef, { name, email, role, status: 'active' }, { merge: true });
                 navigate('home');
             } catch (err) {
                 alert("Auth Error: " + err.message);
@@ -310,13 +294,17 @@
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     currentUserData = { uid: user.uid, ...userDoc.data() };
-                    document.getElementById('currentUserDisplay').innerText = `${currentUserData.name} (${currentUserData.role})` ;
-                    document.getElementById('profileEmailDisplay').innerText = currentUserData.email;
-                    document.getElementById('profileNameDisplay').innerText = currentUserData.name;
-                    document.getElementById('profileRoleDisplay').innerText = currentUserData.role;
+
+                    // Force admin role if logged in with your main email
+                    if (currentUserData.email.toLowerCase() === MAIN_ADMIN_EMAIL.toLowerCase() && currentUserData.role !== 'admin') {
+                        currentUserData.role = 'admin';
+                        await updateDoc(doc(db, "users", user.uid), { role: 'admin' });
+                    }
 
                     if (currentUserData.role === 'admin') {
                         ['phone', 'rewards', 'credit'].forEach(p => document.getElementById(`admin-controls-${p}`).classList.remove('hidden'));
+                    } else {
+                        ['phone', 'rewards', 'credit'].forEach(p => document.getElementById(`admin-controls-${p}`).classList.add('hidden'));
                     }
                     loadListData('phone');
                     loadListData('rewards');
@@ -333,7 +321,7 @@
             navigate('auth');
         };
 
-        // Timer Implementation with 24h limit and quick options
+        // Timer Implementation
         window.startQuickTimer = function(minutes, pageKey) {
             startCountdown(minutes * 60, pageKey);
         };
@@ -398,7 +386,7 @@
             }
         }
 
-        // Dynamic Lists & Tasks Workflow
+        // Dynamic Lists & Tasks
         window.addListRow = function(pageKey, taskText = '', rewardText = '', completed = false) {
             const container = document.getElementById(`list-container-${pageKey}`);
             const row = document.createElement('div');
@@ -411,7 +399,7 @@
                 </div>
                 <div class="flex space-x-1">
                     <button onclick="startTask(this, '${pageKey}')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Start</button>
-                    <button onclick="deleteRow(this)" class="border border-black dark:border-white px-2 py-0.5 text-xs">Delete</button>
+                    ${currentUserData?.role === 'admin' ? `<button onclick="deleteRow(this)" class="border border-black dark:border-white px-2 py-0.5 text-xs">Delete</button>` : ''}
                 </div>
             `;
             container.appendChild(row);
@@ -431,11 +419,11 @@
         };
 
         window.completeTask = function(btn, pageKey) {
-            const statusBox = document.getElementById(`status-box-${pageKey}`);
-            statusBox.innerText = "No tasks being done right now";
+            document.getElementById(`status-box-${pageKey}`).innerText = "No tasks being done right now";
         };
 
         window.saveList = async function(pageKey) {
+            if (currentUserData?.role !== 'admin') return;
             const rows = document.querySelectorAll(`#list-container-${pageKey} > div`);
             const data = Array.from(rows).map(r => ({
                 task: r.querySelector('.task-input')?.value || '',
@@ -450,21 +438,59 @@
             const snap = await getDoc(doc(db, "lists", pageKey));
             const container = document.getElementById(`list-container-${pageKey}`);
             container.innerHTML = '';
-            if (snap.exists()) {
+            if (snap.exists() && snap.data().items && snap.data().items.length > 0) {
                 snap.data().items.forEach(i => addListRow(pageKey, i.task, i.reward, i.completed));
+            } else {
+                container.innerHTML = '<div class="p-4 text-sm opacity-70">No items on the list right now.</div>';
             }
         }
 
         window.promptDeleteList = async function(pageKey) {
+            if (currentUserData?.role !== 'admin') return;
             if (confirm("By deleting this, this will clear the whole list, not delete the list. You can recover this in your history.")) {
                 const snap = await getDoc(doc(db, "lists", pageKey));
                 if (snap.exists()) {
-                    await addDoc(collection(db, "history"), { pageKey, items: snap.data().items, timestamp: new Date() });
+                    await addDoc(collection(db, "history"), { pageKey, items: snap.data().items, timestamp: new Date().toISOString() });
                 }
                 await setDoc(doc(db, "lists", pageKey), { items: [] });
                 loadListData(pageKey);
                 alert("List cleared and moved to history.");
             }
+        };
+
+        async function loadHistoryData(pageKey) {
+            const container = document.getElementById(`history-content-${pageKey}`);
+            container.innerHTML = '<p>Loading history...</p>';
+            const snap = await getDocs(collection(db, "history"));
+            container.innerHTML = '';
+            snap.forEach(docSnap => {
+                const h = docSnap.data();
+                if (h.pageKey === pageKey) {
+                    const div = document.createElement('div');
+                    div.className = "border border-black dark:border-white p-3 mb-2 flex justify-between items-center";
+                    div.innerHTML = `<div><span class="text-xs opacity-70">${h.timestamp}</span><p>${h.items.length} items cleared</p></div>
+                        <div class="space-x-2">
+                            <button onclick="recoverHistory('${docSnap.id}', '${pageKey}')" class="border border-black dark:border-white px-2 py-1 text-xs">Recover</button>
+                            <button onclick="deleteHistory('${docSnap.id}', '${pageKey}')" class="border border-black dark:border-white px-2 py-1 text-xs">Delete</button>
+                        </div>`;
+                    container.appendChild(div);
+                }
+            });
+        }
+
+        window.recoverHistory = async function(historyId, pageKey) {
+            const snap = await getDoc(doc(db, "history", historyId));
+            if (snap.exists()) {
+                await setDoc(doc(db, "lists", pageKey), { items: snap.data().items });
+                loadListData(pageKey);
+                alert("List recovered successfully!");
+                navigate(pageKey === 'phone' ? 'phone-time' : pageKey === 'rewards' ? 'extra-rewards' : 'owed-credit');
+            }
+        };
+
+        window.deleteHistory = async function(historyId, pageKey) {
+            await deleteDoc(doc(db, "history", historyId));
+            loadHistoryData(pageKey);
         };
 
         async function loadUsersList() {
@@ -476,15 +502,28 @@
                 snap.forEach(docSnap => {
                     const u = docSnap.data();
                     const row = document.createElement('div');
-                    row.className = "flex justify-between items-center";
+                    row.className = "flex justify-between items-center py-1";
                     row.innerHTML = `<span>${u.name} (${u.role})</span>`;
-                    if (currentUserData?.role === 'admin' && u.email !== currentUserData.email) {
-                        row.innerHTML += `<button onclick="kickUser('${docSnap.id}')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Kick/Ban</button>`;
+                    
+                    if (currentUserData?.role === 'admin' && u.email.toLowerCase() !== MAIN_ADMIN_EMAIL.toLowerCase()) {
+                        let btnHtml = `<div class="space-x-1">`;
+                        if (u.role === 'admin') {
+                            btnHtml += `<button onclick="setUserRole('${docSnap.id}', 'user')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Dismiss Admin</button>`;
+                        } else {
+                            btnHtml += `<button onclick="setUserRole('${docSnap.id}', 'admin')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Make Admin</button>`;
+                        }
+                        btnHtml += `<button onclick="kickUser('${docSnap.id}')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Kick/Ban</button></div>`;
+                        row.innerHTML += btnHtml;
                     }
                     el.appendChild(row);
                 });
             });
         }
+
+        window.setUserRole = async function(uid, newRole) {
+            await updateDoc(doc(db, "users", uid), { role: newRole });
+            loadUsersList();
+        };
 
         window.kickUser = async function(uid) {
             await deleteDoc(doc(db, "users", uid));
