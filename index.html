@@ -22,198 +22,188 @@
 </head>
 <body class="bg-white text-black dark:bg-black dark:text-white min-h-screen transition-colors duration-200 flex flex-col">
 
-    <!-- TOP NAVIGATION BAR (Sign-in text removed) -->
+    <!-- TOP NAVIGATION BAR -->
     <header class="border-b border-black dark:border-white p-4 flex justify-between items-center">
         <div class="flex items-center space-x-4">
-            <button onclick="navigate('home')" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Home</button>
+            <button onclick="navigate('home')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Home</button>
         </div>
         <div>
-            <button onclick="logoutUser()" class="border border-black dark:border-white px-3 py-1 text-sm font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Log Out</button>
+            <button onclick="logoutUser()" class="border border-black dark:border-white px-4 py-2 text-sm font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Log Out</button>
         </div>
     </header>
 
     <!-- MAIN APP CONTAINER -->
-    <main class="flex-grow p-6 max-w-5xl mx-auto w-full">
+    <main class="flex-grow p-8 max-w-6xl mx-auto w-full flex flex-col justify-center">
 
         <!-- 1. AUTHENTICATION VIEW -->
-        <section id="view-auth" class="view max-w-md mx-auto mt-12 border border-black dark:border-white p-8">
-            <h2 class="text-2xl font-bold mb-6 text-center uppercase tracking-wider">Sign In / Register</h2>
+        <section id="view-auth" class="view max-w-md mx-auto w-full border-2 border-black dark:border-white p-8">
+            <h2 class="text-3xl font-extrabold mb-6 text-center uppercase tracking-wider">Sign In / Register</h2>
             <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm mb-1">Name</label>
-                    <input type="text" id="authName" required class="w-full border border-black dark:border-white bg-transparent p-2 focus:outline-none">
+                    <label class="block text-sm mb-1 font-bold">Name</label>
+                    <input type="text" id="authName" required class="w-full border-2 border-black dark:border-white bg-transparent p-3 focus:outline-none font-medium">
                 </div>
                 <div>
-                    <label class="block text-sm mb-1">Email</label>
-                    <input type="email" id="authEmail" required class="w-full border border-black dark:border-white bg-transparent p-2 focus:outline-none">
+                    <label class="block text-sm mb-1 font-bold">Email</label>
+                    <input type="email" id="authEmail" required class="w-full border-2 border-black dark:border-white bg-transparent p-3 focus:outline-none font-medium">
                 </div>
                 <div>
-                    <label class="block text-sm mb-1">Password</label>
-                    <input type="password" id="authPassword" required class="w-full border border-black dark:border-white bg-transparent p-2 focus:outline-none">
+                    <label class="block text-sm mb-1 font-bold">Password</label>
+                    <input type="password" id="authPassword" required class="w-full border-2 border-black dark:border-white bg-transparent p-3 focus:outline-none font-medium">
                 </div>
-                <div class="flex items-center space-x-2 text-sm">
-                    <input type="checkbox" id="rememberMe" class="border border-black dark:border-white">
+                <div class="flex items-center space-x-2 text-sm py-2">
+                    <input type="checkbox" id="rememberMe" class="border border-black dark:border-white w-4 h-4">
                     <label for="rememberMe">Keep sign in for next time?</label>
                 </div>
-                <button type="submit" class="w-full border border-black dark:border-white py-2 font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Sign In / Register</button>
+                <button type="submit" class="w-full border-2 border-black dark:border-white py-3 font-extrabold text-lg hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition uppercase">Sign In / Register</button>
             </form>
         </section>
 
-        <!-- 2. HOME VIEW -->
-        <section id="view-home" class="view hidden space-y-6">
-            <h1 class="text-3xl font-extrabold uppercase tracking-tight text-center mb-8">Taiya's Portal</h1>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <button onclick="navigate('phone-time')" class="border-2 border-black dark:border-white p-8 text-xl font-bold uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center">Taiya's Phone Time</button>
-                <button onclick="navigate('extra-rewards')" class="border-2 border-black dark:border-white p-8 text-xl font-bold uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center">Taiya's Extra Rewards</button>
-                <button onclick="navigate('owed-credit')" class="border-2 border-black dark:border-white p-8 text-xl font-bold uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center">Taiya's Owed Credit</button>
-                <button onclick="navigate('calendar')" class="border-2 border-black dark:border-white p-8 text-xl font-bold uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center">Calendar</button>
+        <!-- 2. HOME VIEW (Larger, Filling Blocks) -->
+        <section id="view-home" class="view hidden space-y-8 w-full">
+            <h1 class="text-4xl font-black uppercase tracking-tight text-center mb-10">Taiya's Portal</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+                <button onclick="navigate('phone-time')" class="border-4 border-black dark:border-white p-12 text-2xl font-black uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center shadow-lg h-48 flex items-center justify-center">Taiya's Phone Time</button>
+                <button onclick="navigate('extra-rewards')" class="border-4 border-black dark:border-white p-12 text-2xl font-black uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center shadow-lg h-48 flex items-center justify-center">Taiya's Extra Rewards</button>
+                <button onclick="navigate('owed-credit')" class="border-4 border-black dark:border-white p-12 text-2xl font-black uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center shadow-lg h-48 flex items-center justify-center">Taiya's Owed Credit</button>
             </div>
         </section>
 
         <!-- 3. TAIYA'S PHONE TIME VIEW -->
         <section id="view-phone-time" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">Taiya's Phone Time</h2>
+            <h2 class="text-3xl font-black uppercase">Taiya's Phone Time</h2>
             <!-- TIMER COMPONENT -->
-            <div class="border border-black dark:border-white p-6 space-y-4">
-                <div class="text-4xl font-mono text-center tracking-widest" id="timer-display-phone">00:00:00</div>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+                <div class="text-5xl font-mono text-center tracking-widest font-bold" id="timer-display-phone">00:00:00</div>
                 <div class="flex justify-center space-x-2">
-                    <input type="number" id="timer-h" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <input type="number" id="timer-m" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <input type="number" id="timer-s" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <button onclick="startCustomTimer('phone')" class="border border-black dark:border-white px-4 py-1 text-sm font-bold">Start Custom</button>
+                    <input type="number" id="timer-h" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <input type="number" id="timer-m" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <input type="number" id="timer-s" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <button onclick="startCustomTimer('phone')" class="border border-black dark:border-white px-6 py-2 text-sm font-bold uppercase">Start Custom</button>
                 </div>
                 <!-- Quick Options -->
-                <div class="flex flex-wrap justify-center gap-2 pt-2">
-                    <button onclick="startQuickTimer(15, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">15 Mins</button>
-                    <button onclick="startQuickTimer(30, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">30 Mins</button>
-                    <button onclick="startQuickTimer(60, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour</button>
-                    <button onclick="startQuickTimer(90, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour 30 Mins</button>
-                    <button onclick="startQuickTimer(120, 'phone')" class="border border-black dark:border-white px-3 py-1 text-xs">2 Hours</button>
-                    <button onclick="cancelTimer('phone')" class="border border-black dark:border-white px-3 py-1 text-xs bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                <div class="flex flex-wrap justify-center gap-3 pt-2">
+                    <button onclick="startQuickTimer(15, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">2 Hours</button>
+                    <button onclick="cancelTimer('phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
                 </div>
             </div>
             <!-- LIST COMPONENT -->
-            <div class="border border-black dark:border-white p-6 space-y-4">
-                <h3 class="font-bold uppercase">Earn Time (Tasks & Reward)</h3>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+                <h3 class="text-xl font-bold uppercase">Earn Time (Tasks & Reward)</h3>
                 <div id="list-container-phone" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
-                <div id="admin-controls-phone" class="hidden space-y-2">
-                    <button onclick="addListRow('phone')" class="border border-black dark:border-white px-4 py-1 text-sm">+ Add Line</button>
-                    <button onclick="saveList('phone')" class="border border-black dark:border-white px-4 py-1 text-sm">Save List</button>
-                    <button onclick="promptDeleteList('phone')" class="border border-black dark:border-white px-4 py-1 text-sm">Delete/Clear List</button>
+                <div class="space-x-2 space-y-2">
+                    <button onclick="addListRow('phone')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">+ Add Line</button>
+                    <button onclick="saveList('phone')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Save List</button>
+                    <button onclick="promptDeleteList('phone')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Delete/Clear List</button>
                 </div>
                 <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-phone">
                     No tasks being done right now
                 </div>
-                <button onclick="navigate('history-phone')" class="text-xs underline block mt-2">View History</button>
+                <button onclick="navigate('history-phone')" class="text-xs underline block mt-4 font-bold">View History</button>
             </div>
-            <!-- Active Users Moderation List -->
             <div class="border border-black dark:border-white p-4">
-                <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users (Admin Moderation)</h4>
-                <div id="user-moderation-list" class="space-y-1 text-sm"></div>
+                <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users</h4>
+                <div id="user-moderation-list" class="space-y-1 text-sm font-mono"></div>
             </div>
         </section>
 
         <!-- 4. TAIYA'S EXTRA REWARDS VIEW -->
         <section id="view-extra-rewards" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">Taiya's Extra Rewards</h2>
+            <h2 class="text-3xl font-black uppercase">Taiya's Extra Rewards</h2>
             <!-- TIMER COMPONENT -->
-            <div class="border border-black dark:border-white p-6 space-y-4">
-                <div class="text-4xl font-mono text-center tracking-widest" id="timer-display-rewards">00:00:00</div>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+                <div class="text-5xl font-mono text-center tracking-widest font-bold" id="timer-display-rewards">00:00:00</div>
                 <div class="flex justify-center space-x-2">
-                    <input type="number" id="timer-h-r" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <input type="number" id="timer-m-r" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <input type="number" id="timer-s-r" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <button onclick="startCustomTimer('rewards')" class="border border-black dark:border-white px-4 py-1 text-sm font-bold">Start Custom</button>
+                    <input type="number" id="timer-h-r" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <input type="number" id="timer-m-r" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <input type="number" id="timer-s-r" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <button onclick="startCustomTimer('rewards')" class="border border-black dark:border-white px-6 py-2 text-sm font-bold uppercase">Start Custom</button>
                 </div>
-                <div class="flex flex-wrap justify-center gap-2 pt-2">
-                    <button onclick="startQuickTimer(15, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">15 Mins</button>
-                    <button onclick="startQuickTimer(30, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">30 Mins</button>
-                    <button onclick="startQuickTimer(60, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour</button>
-                    <button onclick="startQuickTimer(90, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour 30 Mins</button>
-                    <button onclick="startQuickTimer(120, 'rewards')" class="border border-black dark:border-white px-3 py-1 text-xs">2 Hours</button>
-                    <button onclick="cancelTimer('rewards')" class="border border-black dark:border-white px-3 py-1 text-xs bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                <div class="flex flex-wrap justify-center gap-3 pt-2">
+                    <button onclick="startQuickTimer(15, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">2 Hours</button>
+                    <button onclick="cancelTimer('rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
                 </div>
             </div>
             <!-- LIST COMPONENT -->
-            <div class="border border-black dark:border-white p-6 space-y-4">
-                <h3 class="font-bold uppercase">Rewards List</h3>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+                <h3 class="text-xl font-bold uppercase">Rewards List</h3>
                 <div id="list-container-rewards" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
-                <div id="admin-controls-rewards" class="hidden space-y-2">
-                    <button onclick="addListRow('rewards')" class="border border-black dark:border-white px-4 py-1 text-sm">+ Add Line</button>
-                    <button onclick="saveList('rewards')" class="border border-black dark:border-white px-4 py-1 text-sm">Save List</button>
-                    <button onclick="promptDeleteList('rewards')" class="border border-black dark:border-white px-4 py-1 text-sm">Delete/Clear List</button>
+                <div class="space-x-2 space-y-2">
+                    <button onclick="addListRow('rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">+ Add Line</button>
+                    <button onclick="saveList('rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Save List</button>
+                    <button onclick="promptDeleteList('rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Delete/Clear List</button>
                 </div>
                 <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-rewards">No tasks being done right now</div>
-                <button onclick="navigate('history-rewards')" class="text-xs underline block mt-2">View History</button>
+                <button onclick="navigate('history-rewards')" class="text-xs underline block mt-4 font-bold">View History</button>
             </div>
             <div class="border border-black dark:border-white p-4">
                 <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users</h4>
-                <div id="user-moderation-list-2" class="space-y-1 text-sm"></div>
+                <div id="user-moderation-list-2" class="space-y-1 text-sm font-mono"></div>
             </div>
         </section>
 
         <!-- 5. TAIYA'S OWED CREDIT VIEW -->
         <section id="view-owed-credit" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">Taiya's Owed Credit</h2>
+            <h2 class="text-3xl font-black uppercase">Taiya's Owed Credit</h2>
             <!-- TIMER COMPONENT -->
-            <div class="border border-black dark:border-white p-6 space-y-4">
-                <div class="text-4xl font-mono text-center tracking-widest" id="timer-display-credit">00:00:00</div>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+                <div class="text-5xl font-mono text-center tracking-widest font-bold" id="timer-display-credit">00:00:00</div>
                 <div class="flex justify-center space-x-2">
-                    <input type="number" id="timer-h-c" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <input type="number" id="timer-m-c" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <input type="number" id="timer-s-c" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-16 text-center bg-transparent p-1">
-                    <button onclick="startCustomTimer('credit')" class="border border-black dark:border-white px-4 py-1 text-sm font-bold">Start Custom</button>
+                    <input type="number" id="timer-h-c" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <input type="number" id="timer-m-c" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <input type="number" id="timer-s-c" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
+                    <button onclick="startCustomTimer('credit')" class="border border-black dark:border-white px-6 py-2 text-sm font-bold uppercase">Start Custom</button>
                 </div>
-                <div class="flex flex-wrap justify-center gap-2 pt-2">
-                    <button onclick="startQuickTimer(15, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">15 Mins</button>
-                    <button onclick="startQuickTimer(30, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">30 Mins</button>
-                    <button onclick="startQuickTimer(60, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour</button>
-                    <button onclick="startQuickTimer(90, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">1 Hour 30 Mins</button>
-                    <button onclick="startQuickTimer(120, 'credit')" class="border border-black dark:border-white px-3 py-1 text-xs">2 Hours</button>
-                    <button onclick="cancelTimer('credit')" class="border border-black dark:border-white px-3 py-1 text-xs bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                <div class="flex flex-wrap justify-center gap-3 pt-2">
+                    <button onclick="startQuickTimer(15, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">2 Hours</button>
+                    <button onclick="cancelTimer('credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
                 </div>
             </div>
             <!-- CHECKLIST COMPONENT -->
-            <div class="border border-black dark:border-white p-6 space-y-4">
-                <h3 class="font-bold uppercase">Owed Time Checklist</h3>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+                <h3 class="text-xl font-bold uppercase">Owed Time Checklist</h3>
                 <div id="list-container-credit" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
-                <div id="admin-controls-credit" class="hidden space-y-2">
-                    <button onclick="addListRow('credit')" class="border border-black dark:border-white px-4 py-1 text-sm">+ Add Line</button>
-                    <button onclick="saveList('credit')" class="border border-black dark:border-white px-4 py-1 text-sm">Save Checklist</button>
-                    <button onclick="promptDeleteList('credit')" class="border border-black dark:border-white px-4 py-1 text-sm">Delete/Clear List</button>
+                <div class="space-x-2 space-y-2">
+                    <button onclick="addListRow('credit')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">+ Add Line</button>
+                    <button onclick="saveList('credit')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Save Checklist</button>
+                    <button onclick="promptDeleteList('credit')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Delete/Clear List</button>
                 </div>
                 <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-credit">No tasks being done right now</div>
-                <button onclick="navigate('history-credit')" class="text-xs underline block mt-2">View History</button>
+                <button onclick="navigate('history-credit')" class="text-xs underline block mt-4 font-bold">View History</button>
             </div>
             <div class="border border-black dark:border-white p-4">
                 <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users</h4>
-                <div id="user-moderation-list-3" class="space-y-1 text-sm"></div>
-            </div>
-        </section>
-
-        <!-- 6. CALENDAR VIEW -->
-        <section id="view-calendar" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">Weekly Calendar (Timer Time Log)</h2>
-            <div class="border border-black dark:border-white p-6">
-                <div id="weekly-calendar-grid" class="grid grid-cols-1 md:grid-cols-7 gap-4 text-center font-mono"></div>
+                <div id="user-moderation-list-3" class="space-y-1 text-sm font-mono"></div>
             </div>
         </section>
 
         <!-- HISTORY VIEWS -->
         <section id="view-history-phone" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">Phone Time History & Recovery</h2>
-            <div class="border border-black dark:border-white p-6 space-y-4" id="history-content-phone"></div>
-            <button onclick="navigate('phone-time')" class="border border-black dark:border-white px-4 py-1 text-sm">Back</button>
+            <h2 class="text-3xl font-black uppercase">Phone Time History & Recovery</h2>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-phone"></div>
+            <button onclick="navigate('phone-time')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Back</button>
         </section>
         <section id="view-history-rewards" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">Rewards History & Recovery</h2>
-            <div class="border border-black dark:border-white p-6 space-y-4" id="history-content-rewards"></div>
-            <button onclick="navigate('extra-rewards')" class="border border-black dark:border-white px-4 py-1 text-sm">Back</button>
+            <h2 class="text-3xl font-black uppercase">Rewards History & Recovery</h2>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-rewards"></div>
+            <button onclick="navigate('extra-rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Back</button>
         </section>
         <section id="view-history-credit" class="view hidden space-y-6">
-            <h2 class="text-2xl font-bold uppercase">Credit History & Recovery</h2>
-            <div class="border border-black dark:border-white p-6 space-y-4" id="history-content-credit"></div>
-            <button onclick="navigate('owed-credit')" class="border border-black dark:border-white px-4 py-1 text-sm">Back</button>
+            <h2 class="text-3xl font-black uppercase">Credit History & Recovery</h2>
+            <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-credit"></div>
+            <button onclick="navigate('owed-credit')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Back</button>
         </section>
 
     </main>
@@ -222,7 +212,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
         const firebaseConfig = {
@@ -240,17 +230,12 @@
         const db = getFirestore(app);
         const analytics = getAnalytics(app);
 
-        let currentUserData = null;
         let activeTimers = {};
-
-        // YOUR EXACT ADMIN EMAIL
-        const MAIN_ADMIN_EMAIL = "taiyaberman4@gmail.com"; 
 
         window.navigate = function(viewName) {
             document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById(`view-${viewName}`);
             if (target) target.classList.remove('hidden');
-            if (viewName === 'calendar') loadCalendar();
             if (viewName.startsWith('history-')) loadHistoryData(viewName.replace('history-', ''));
         };
 
@@ -270,19 +255,7 @@
                 }
                 
                 const userDocRef = doc(db, "users", res.user.uid);
-                const userSnap = await getDoc(userDocRef);
-                
-                let role = 'user';
-                if (email.toLowerCase() === MAIN_ADMIN_EMAIL.toLowerCase()) {
-                    role = 'admin';
-                } else if (userSnap.exists()) {
-                    role = userSnap.data().role;
-                } else {
-                    const allUsers = await getDocs(collection(db, "users"));
-                    if (allUsers.size === 0) role = 'admin';
-                }
-
-                await setDoc(userDocRef, { name, email, role, status: 'active' }, { merge: true });
+                await setDoc(userDocRef, { name, email, status: 'active' }, { merge: true });
                 navigate('home');
             } catch (err) {
                 alert("Auth Error: " + err.message);
@@ -291,26 +264,10 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    currentUserData = { uid: user.uid, ...userDoc.data() };
-
-                    // Force admin role if logged in with your main email
-                    if (currentUserData.email.toLowerCase() === MAIN_ADMIN_EMAIL.toLowerCase() && currentUserData.role !== 'admin') {
-                        currentUserData.role = 'admin';
-                        await updateDoc(doc(db, "users", user.uid), { role: 'admin' });
-                    }
-
-                    if (currentUserData.role === 'admin') {
-                        ['phone', 'rewards', 'credit'].forEach(p => document.getElementById(`admin-controls-${p}`).classList.remove('hidden'));
-                    } else {
-                        ['phone', 'rewards', 'credit'].forEach(p => document.getElementById(`admin-controls-${p}`).classList.add('hidden'));
-                    }
-                    loadListData('phone');
-                    loadListData('rewards');
-                    loadListData('credit');
-                    loadUsersList();
-                }
+                loadListData('phone');
+                loadListData('rewards');
+                loadListData('credit');
+                loadUsersList();
             } else {
                 navigate('auth');
             }
@@ -348,7 +305,6 @@
 
                 if (remaining <= 0) {
                     clearInterval(activeTimers[pageKey]);
-                    logTimeToCalendar(durationSecs);
                     alert("Timer finished!");
                 }
                 remaining--;
@@ -360,46 +316,20 @@
             document.getElementById(`timer-display-${pageKey}`).innerText = "00:00:00";
         };
 
-        async function logTimeToCalendar(seconds) {
-            const today = new Date().toISOString().split('T')[0];
-            const ref = doc(db, "calendar", today);
-            const snap = await getDoc(ref);
-            const existing = snap.exists() ? snap.data().totalSeconds : 0;
-            await setDoc(ref, { totalSeconds: existing + seconds }, { merge: true });
-        }
-
-        async function loadCalendar() {
-            const grid = document.getElementById('weekly-calendar-grid');
-            grid.innerHTML = '';
-            for (let i = 0; i < 7; i++) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const dateStr = d.toISOString().split('T')[0];
-                const snap = await getDoc(doc(db, "calendar", dateStr));
-                const secs = snap.exists() ? snap.data().totalSeconds : 0;
-                const hrs = (secs / 3600).toFixed(1);
-                
-                const box = document.createElement('div');
-                box.className = "border border-black dark:border-white p-4";
-                box.innerHTML = `<div class="font-bold">${dateStr}</div><div>${hrs} Hours</div>`;
-                grid.appendChild(box);
-            }
-        }
-
-        // Dynamic Lists & Tasks
+        // Dynamic Lists & Tasks (Fully open to everyone)
         window.addListRow = function(pageKey, taskText = '', rewardText = '', completed = false) {
             const container = document.getElementById(`list-container-${pageKey}`);
             const row = document.createElement('div');
-            row.className = `flex items-center justify-between p-2 ${completed ? 'bg-gray-300 dark:bg-gray-800 text-gray-500' : ''}`;
+            row.className = `flex items-center justify-between p-3 ${completed ? 'bg-gray-300 dark:bg-gray-800 text-gray-500' : ''}`;
             row.innerHTML = `
-                <div class="flex items-center space-x-2 w-full">
-                    ${pageKey === 'credit' ? `<input type="checkbox" class="task-check" ${completed ? 'checked' : ''}>` : '<span class="bullet">•</span>'}
-                    <input type="text" value="${taskText}" placeholder="Task description" class="task-input bg-transparent border-b border-black dark:border-white w-1/2 p-1" ${currentUserData?.role !== 'admin' ? 'readonly' : ''}>
-                    <input type="text" value="${rewardText}" placeholder="Reward / Owed Time" class="reward-input bg-transparent border-b border-black dark:border-white w-1/3 p-1" ${currentUserData?.role !== 'admin' ? 'readonly' : ''}>
+                <div class="flex items-center space-x-3 w-full">
+                    ${pageKey === 'credit' ? `<input type="checkbox" class="task-check w-5 h-5" ${completed ? 'checked' : ''}>` : '<span class="bullet font-bold">•</span>'}
+                    <input type="text" value="${taskText}" placeholder="Task description" class="task-input bg-transparent border-b-2 border-black dark:border-white w-1/2 p-2 font-medium">
+                    <input type="text" value="${rewardText}" placeholder="Reward / Owed Time" class="reward-input bg-transparent border-b-2 border-black dark:border-white w-1/3 p-2 font-medium">
                 </div>
-                <div class="flex space-x-1">
-                    <button onclick="startTask(this, '${pageKey}')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Start</button>
-                    ${currentUserData?.role === 'admin' ? `<button onclick="deleteRow(this)" class="border border-black dark:border-white px-2 py-0.5 text-xs">Delete</button>` : ''}
+                <div class="flex space-x-2">
+                    <button onclick="startTask(this, '${pageKey}')" class="border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Start</button>
+                    <button onclick="deleteRow(this)" class="border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Delete</button>
                 </div>
             `;
             container.appendChild(row);
@@ -414,7 +344,7 @@
             const taskInput = row.querySelector('.task-input').value;
             document.getElementById(`status-box-${pageKey}`).innerHTML = `
                 <div>Task in process: <strong>${taskInput}</strong></div>
-                <button onclick="completeTask(this, '${pageKey}')" class="mt-2 border border-black dark:border-white px-3 py-1 text-xs">Complete?</button>
+                <button onclick="completeTask(this, '${pageKey}')" class="mt-2 border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Complete?</button>
             `;
         };
 
@@ -423,7 +353,6 @@
         };
 
         window.saveList = async function(pageKey) {
-            if (currentUserData?.role !== 'admin') return;
             const rows = document.querySelectorAll(`#list-container-${pageKey} > div`);
             const data = Array.from(rows).map(r => ({
                 task: r.querySelector('.task-input')?.value || '',
@@ -441,12 +370,11 @@
             if (snap.exists() && snap.data().items && snap.data().items.length > 0) {
                 snap.data().items.forEach(i => addListRow(pageKey, i.task, i.reward, i.completed));
             } else {
-                container.innerHTML = '<div class="p-4 text-sm opacity-70">No items on the list right now.</div>';
+                container.innerHTML = '<div class="p-4 text-sm opacity-70">No items on the list right now. Click "+ Add Line" below to add tasks!</div>';
             }
         }
 
         window.promptDeleteList = async function(pageKey) {
-            if (currentUserData?.role !== 'admin') return;
             if (confirm("By deleting this, this will clear the whole list, not delete the list. You can recover this in your history.")) {
                 const snap = await getDoc(doc(db, "lists", pageKey));
                 if (snap.exists()) {
@@ -467,11 +395,11 @@
                 const h = docSnap.data();
                 if (h.pageKey === pageKey) {
                     const div = document.createElement('div');
-                    div.className = "border border-black dark:border-white p-3 mb-2 flex justify-between items-center";
-                    div.innerHTML = `<div><span class="text-xs opacity-70">${h.timestamp}</span><p>${h.items.length} items cleared</p></div>
+                    div.className = "border border-black dark:border-white p-4 mb-3 flex justify-between items-center";
+                    div.innerHTML = `<div><span class="text-xs opacity-70 font-mono">${h.timestamp}</span><p class="font-bold">${h.items.length} items cleared</p></div>
                         <div class="space-x-2">
-                            <button onclick="recoverHistory('${docSnap.id}', '${pageKey}')" class="border border-black dark:border-white px-2 py-1 text-xs">Recover</button>
-                            <button onclick="deleteHistory('${docSnap.id}', '${pageKey}')" class="border border-black dark:border-white px-2 py-1 text-xs">Delete</button>
+                            <button onclick="recoverHistory('${docSnap.id}', '${pageKey}')" class="border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Recover</button>
+                            <button onclick="deleteHistory('${docSnap.id}', '${pageKey}')" class="border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Delete</button>
                         </div>`;
                     container.appendChild(div);
                 }
@@ -503,32 +431,11 @@
                     const u = docSnap.data();
                     const row = document.createElement('div');
                     row.className = "flex justify-between items-center py-1";
-                    row.innerHTML = `<span>${u.name} (${u.role})</span>`;
-                    
-                    if (currentUserData?.role === 'admin' && u.email.toLowerCase() !== MAIN_ADMIN_EMAIL.toLowerCase()) {
-                        let btnHtml = `<div class="space-x-1">`;
-                        if (u.role === 'admin') {
-                            btnHtml += `<button onclick="setUserRole('${docSnap.id}', 'user')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Dismiss Admin</button>`;
-                        } else {
-                            btnHtml += `<button onclick="setUserRole('${docSnap.id}', 'admin')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Make Admin</button>`;
-                        }
-                        btnHtml += `<button onclick="kickUser('${docSnap.id}')" class="border border-black dark:border-white px-2 py-0.5 text-xs">Kick/Ban</button></div>`;
-                        row.innerHTML += btnHtml;
-                    }
+                    row.innerHTML = `<span>${u.name} (${u.email})</span>`;
                     el.appendChild(row);
                 });
             });
         }
-
-        window.setUserRole = async function(uid, newRole) {
-            await updateDoc(doc(db, "users", uid), { role: newRole });
-            loadUsersList();
-        };
-
-        window.kickUser = async function(uid) {
-            await deleteDoc(doc(db, "users", uid));
-            loadUsersList();
-        };
     </script>
 </body>
 </html>
