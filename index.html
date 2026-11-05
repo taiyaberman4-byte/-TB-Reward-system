@@ -27,7 +27,8 @@
         <div class="flex items-center space-x-4">
             <button onclick="navigate('home')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Home</button>
         </div>
-        <div>
+        <div class="flex items-center space-x-4">
+            <span id="current-user-badge" class="text-xs font-mono font-bold"></span>
             <button onclick="logoutUser()" class="border border-black dark:border-white px-4 py-2 text-sm font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Log Out</button>
         </div>
     </header>
@@ -195,11 +196,13 @@
             <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-phone"></div>
             <button onclick="navigate('phone-time')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Back</button>
         </section>
+        
         <section id="view-history-rewards" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Rewards History & Recovery</h2>
             <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-rewards"></div>
             <button onclick="navigate('extra-rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Back</button>
         </section>
+        
         <section id="view-history-credit" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Credit History & Recovery</h2>
             <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-credit"></div>
@@ -230,7 +233,10 @@
         const db = getFirestore(app);
         const analytics = getAnalytics(app);
 
+        // Defined Admin Emails
+        const ADMIN_EMAILS = ["taiyaberman4@gmail.com", "storm.rhodes@outlook.com"];
         let activeTimers = {};
+        let currentUserRole = 'guest';
 
         window.navigate = function(viewName) {
             document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
@@ -239,7 +245,7 @@
             if (viewName.startsWith('history-')) loadHistoryData(viewName.replace('history-', ''));
         };
 
-        // Authentication Handler
+        // Authentication Handler with Admin Check
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('authName').value;
@@ -254,8 +260,9 @@
                     res = await createUserWithEmailAndPassword(auth, email, password);
                 }
                 
+                const role = ADMIN_EMAILS.includes(email.toLowerCase()) ? 'admin' : 'guest';
                 const userDocRef = doc(db, "users", res.user.uid);
-                await setDoc(userDocRef, { name, email, status: 'active' }, { merge: true });
+                await setDoc(userDocRef, { name, email, role, status: 'active' }, { merge: true });
                 navigate('home');
             } catch (err) {
                 alert("Auth Error: " + err.message);
@@ -264,11 +271,24 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                const userSnap = await getDoc(doc(db, "users", user.uid));
+                if (userSnap.exists()) {
+                    currentUserRole = userSnap.data().role || (ADMIN_EMAILS.includes(user.email.toLowerCase()) ? 'admin' : 'guest');
+                } else {
+                    currentUserRole = ADMIN_EMAILS.includes(user.email.toLowerCase()) ? 'admin' : 'guest';
+                }
+
+                const badge = document.getElementById('current-user-badge');
+                if (badge) {
+                    badge.innerHTML = currentUserRole === 'admin' ? `<span class="border border-black dark:border-white px-2 py-1">[ADMIN] ${user.email}</span>` : user.email;
+                }
+
                 loadListData('phone');
                 loadListData('rewards');
                 loadListData('credit');
                 loadUsersList();
             } else {
+                currentUserRole = 'guest';
                 navigate('auth');
             }
         });
@@ -316,7 +336,7 @@
             document.getElementById(`timer-display-${pageKey}`).innerText = "00:00:00";
         };
 
-        // Dynamic Lists & Tasks (Fully open to everyone)
+        // Dynamic Lists & Tasks (Fully open editing for everyone)
         window.addListRow = function(pageKey, taskText = '', rewardText = '', completed = false) {
             const container = document.getElementById(`list-container-${pageKey}`);
             const row = document.createElement('div');
@@ -429,9 +449,10 @@
                 el.innerHTML = '';
                 snap.forEach(docSnap => {
                     const u = docSnap.data();
+                    const isAdmin = ADMIN_EMAILS.includes(u.email?.toLowerCase()) || u.role === 'admin';
                     const row = document.createElement('div');
                     row.className = "flex justify-between items-center py-1";
-                    row.innerHTML = `<span>${u.name} (${u.email})</span>`;
+                    row.innerHTML = `<span>${u.name} (${u.email}) ${isAdmin ? '<strong class="ml-2 px-1 border border-black dark:border-white text-xs">ADMIN</strong>' : ''}</span>`;
                     el.appendChild(row);
                 });
             });
