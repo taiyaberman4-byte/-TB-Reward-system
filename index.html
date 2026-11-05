@@ -85,7 +85,7 @@
                 </div>
                 <div class="flex items-center space-x-2 text-sm py-2">
                     <input type="checkbox" id="rememberMe" class="border-2 border-forestGreen w-4 h-4 rounded accent-forestGreen">
-                    <label for="rememberMe" class="font-bold">Save sign in for next time?</label>
+                    <label for="rememberMe" class="font-bold">Keep sign in for next time?</label>
                 </div>
                 <button type="submit" class="w-full border-2 border-forestGreen bg-forestGreen text-white py-3 font-extrabold text-lg rounded-xl hover:bg-deepPine transition uppercase shadow-md">Sign In / Register</button>
             </form>
@@ -95,7 +95,8 @@
         <section id="view-home" class="view hidden space-y-8 w-full">
             <div class="text-center space-y-2">
                 <h1 class="text-5xl font-black tracking-tight uppercase flex items-center justify-center space-x-3">
-                    <span>Portal</span>
+                    <span>🐨</span>
+                    <span>Taiya's Portal</span>
                     <span>🌿</span>
                 </h1>
             </div>
@@ -310,6 +311,7 @@
         let activeTimers = {};
         let currentUserRole = 'guest';
         let currentUserName = 'User';
+        let activeTaskRow = null;
 
         window.navigate = function(viewName) {
             document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
@@ -419,31 +421,67 @@
             document.getElementById(`timer-display-${pageKey}`).innerText = "00:00:00";
         };
 
-        // Dynamic Lists & Tasks
-        window.addListRow = function(pageKey, taskText = '', rewardText = '', completed = false) {
+        // --- DYNAMIC LOCKABLE TASKS SYSTEM ---
+        window.addListRow = function(pageKey, taskText = '', rewardText = '', completed = false, isSaved = false) {
             const container = document.getElementById(`list-container-${pageKey}`);
             const row = document.createElement('div');
-            row.className = `flex items-center justify-between p-3 ${completed ? 'bg-gray-200 text-gray-500' : 'bg-cardBg'}`;
+            row.className = `task-row relative flex items-center justify-between p-3 transition ${completed ? 'bg-gray-300/60 opacity-60 line-through' : 'bg-cardBg'}`;
+            
             row.innerHTML = `
-                <div class="flex items-center space-x-3 w-full">
-                    ${pageKey === 'credit' ? `<input type="checkbox" class="task-check w-5 h-5 rounded accent-forestGreen" ${completed ? 'checked' : ''}>` : '<span class="bullet font-bold">•</span>'}
-                    <input type="text" value="${taskText}" placeholder="Task description" class="task-input bg-transparent border-b-2 border-forestGreen w-1/2 p-2 font-medium focus:outline-none">
-                    <input type="text" value="${rewardText}" placeholder="Reward / Owed Time" class="reward-input bg-transparent border-b-2 border-forestGreen w-1/3 p-2 font-medium focus:outline-none">
+                ${completed ? '<div class="absolute inset-0 flex items-center justify-center font-black text-xs uppercase tracking-widest text-forestGreen bg-sageGreen/30 border border-forestGreen/30 rounded">COMPLETED</div>' : ''}
+                <div class="flex items-center space-x-3 w-full ${completed ? 'pointer-events-none' : ''}">
+                    ${pageKey === 'credit' ? `<input type="checkbox" class="task-check w-5 h-5 rounded accent-forestGreen" ${completed ? 'checked' : ''} ${isSaved ? 'disabled' : ''}>` : '<span class="bullet font-bold">•</span>'}
+                    <input type="text" value="${taskText}" placeholder="Task description" class="task-input bg-transparent border-b-2 border-forestGreen w-1/2 p-2 font-medium focus:outline-none" ${isSaved ? 'readonly disabled' : ''}>
+                    <input type="text" value="${rewardText}" placeholder="Reward / Owed Time" class="reward-input bg-transparent border-b-2 border-forestGreen w-1/3 p-2 font-medium focus:outline-none" ${isSaved ? 'readonly disabled' : ''}>
                 </div>
-                <div class="flex space-x-2">
-                    <button onclick="startTask(this, '${pageKey}')" class="border-2 border-forestGreen bg-forestBg px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">Start</button>
-                    <button onclick="deleteRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Delete</button>
+                <div class="flex space-x-2 task-controls z-10">
+                    ${isSaved ? `
+                        <button onclick="startTask(this, '${pageKey}')" class="border-2 border-forestGreen bg-forestBg px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">Start</button>
+                        <button onclick="enableTaskEdit(this)" class="border-2 border-forestGreen bg-forestBg px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen" title="Edit Task">✏️</button>
+                    ` : `
+                        <button onclick="saveSingleTask(this, '${pageKey}')" class="border-2 border-forestGreen bg-forestGreen text-white px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-deepPine">Save</button>
+                        <button onclick="deleteRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Delete</button>
+                    `}
                 </div>
             `;
             container.appendChild(row);
         };
 
+        window.enableTaskEdit = function(btn) {
+            const row = btn.closest('.task-row');
+            row.querySelectorAll('input').forEach(input => {
+                input.removeAttribute('readonly');
+                input.removeAttribute('disabled');
+            });
+            const controls = row.querySelector('.task-controls');
+            const pageKey = row.closest('[id^="list-container-"]').id.replace('list-container-', '');
+            controls.innerHTML = `
+                <button onclick="saveSingleTask(this, '${pageKey}')" class="border-2 border-forestGreen bg-forestGreen text-white px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-deepPine">Save</button>
+                <button onclick="deleteRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Delete</button>
+            `;
+        };
+
+        window.saveSingleTask = function(btn, pageKey) {
+            const row = btn.closest('.task-row');
+            row.querySelectorAll('input').forEach(input => {
+                input.setAttribute('readonly', 'true');
+                input.setAttribute('disabled', 'true');
+            });
+            const controls = row.querySelector('.task-controls');
+            controls.innerHTML = `
+                <button onclick="startTask(this, '${pageKey}')" class="border-2 border-forestGreen bg-forestBg px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">Start</button>
+                <button onclick="enableTaskEdit(this)" class="border-2 border-forestGreen bg-forestBg px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen" title="Edit Task">✏️</button>
+            `;
+            saveList(pageKey);
+        };
+
         window.deleteRow = function(btn) {
-            btn.closest('div.flex').parentElement.remove();
+            btn.closest('.task-row').remove();
         };
 
         window.startTask = function(btn, pageKey) {
-            const row = btn.closest('div.flex').parentElement;
+            const row = btn.closest('.task-row');
+            activeTaskRow = row;
             const taskInput = row.querySelector('.task-input').value;
             document.getElementById(`status-box-${pageKey}`).innerHTML = `
                 <div>Task in process: <strong>${taskInput}</strong></div>
@@ -452,7 +490,24 @@
         };
 
         window.completeTask = function(btn, pageKey) {
+            if (activeTaskRow) {
+                activeTaskRow.classList.add('bg-gray-300/60', 'opacity-60', 'line-through');
+                const innerDiv = activeTaskRow.querySelector('.flex.items-center.space-x-3');
+                if (innerDiv) innerDiv.classList.add('pointer-events-none');
+                
+                const checkbox = activeTaskRow.querySelector('.task-check');
+                if (checkbox) checkbox.checked = true;
+
+                // Add COMPLETED banner overlay
+                const badge = document.createElement('div');
+                badge.className = 'absolute inset-0 flex items-center justify-center font-black text-xs uppercase tracking-widest text-forestGreen bg-sageGreen/30 border border-forestGreen/30 rounded';
+                badge.innerText = 'COMPLETED';
+                activeTaskRow.appendChild(badge);
+
+                activeTaskRow = null;
+            }
             document.getElementById(`status-box-${pageKey}`).innerText = "No tasks being done right now";
+            saveList(pageKey);
         };
 
         window.saveList = async function(pageKey) {
@@ -460,7 +515,7 @@
             const data = Array.from(rows).map(r => ({
                 task: r.querySelector('.task-input')?.value || '',
                 reward: r.querySelector('.reward-input')?.value || '',
-                completed: r.querySelector('.task-check')?.checked || false
+                completed: r.classList.contains('line-through') || r.querySelector('.task-check')?.checked || false
             }));
             await setDoc(doc(db, "lists", pageKey), { items: data });
             alert("List saved successfully!");
@@ -471,7 +526,7 @@
             const container = document.getElementById(`list-container-${pageKey}`);
             container.innerHTML = '';
             if (snap.exists() && snap.data().items && snap.data().items.length > 0) {
-                snap.data().items.forEach(i => addListRow(pageKey, i.task, i.reward, i.completed));
+                snap.data().items.forEach(i => addListRow(pageKey, i.task, i.reward, i.completed, true));
             } else {
                 container.innerHTML = '<div class="p-4 text-sm opacity-70">No items on the list right now. Click "+ Add Line" below to add tasks!</div>';
             }
