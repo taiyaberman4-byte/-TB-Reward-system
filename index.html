@@ -1,72 +1,107 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taiya's Portal</title>
+    <title>Taiya's Forest Portal</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        black: '#000000',
-                        white: '#ffffff',
+                        forestGreen: '#2d4a3e',
+                        deepPine: '#1b3027',
+                        sageGreen: '#8fa89b',
+                        forestBg: '#f2f5f1',
+                        cardBg: '#ffffff',
+                        forestBlue: '#466982',
+                        earthBrown: '#5c4a42',
+                        accentClay: '#c48b65',
+                    },
+                    fontFamily: {
+                        heading: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains"', 'monospace']
                     }
                 }
             }
         }
     </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f2f5f1;
+            color: #000000;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            color: #000000 !important;
+        }
+        input, button, span, p, div, label {
+            color: #000000;
+        }
+    </style>
 </head>
-<body class="bg-white text-black dark:bg-black dark:text-white min-h-screen transition-colors duration-200 flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-sageGreen selection:text-black">
 
     <!-- TOP NAVIGATION BAR -->
-    <header class="border-b border-black dark:border-white p-4 flex justify-between items-center">
+    <header class="border-b-2 border-forestGreen bg-[#e4ebe5] p-4 flex justify-between items-center shadow-sm">
         <div class="flex items-center space-x-4">
-            <button onclick="navigate('home')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Home</button>
+            <button onclick="navigate('home')" class="border-2 border-forestGreen bg-cardBg px-5 py-2 text-sm font-bold rounded-xl shadow-sm hover:bg-forestGreen hover:text-white transition transform active:scale-95">Home</button>
         </div>
         <div class="flex items-center space-x-4">
-            <span id="current-user-badge" class="text-xs font-mono font-bold"></span>
-            <button onclick="logoutUser()" class="border border-black dark:border-white px-4 py-2 text-sm font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">Log Out</button>
+            <span id="current-user-badge" class="text-xs font-mono font-bold px-3 py-1 bg-sageGreen rounded-lg border border-forestGreen"></span>
+            <button onclick="logoutUser()" class="border-2 border-forestGreen bg-cardBg px-4 py-2 text-sm font-bold rounded-xl shadow-sm hover:bg-earthBrown hover:text-white transition">Log Out</button>
         </div>
     </header>
 
     <!-- MAIN APP CONTAINER -->
-    <main class="flex-grow p-8 max-w-6xl mx-auto w-full flex flex-col justify-center">
+    <main class="flex-grow p-6 max-w-6xl mx-auto w-full flex flex-col justify-center">
 
         <!-- 1. AUTHENTICATION VIEW -->
-        <section id="view-auth" class="view max-w-md mx-auto w-full border-2 border-black dark:border-white p-8">
-            <h2 class="text-3xl font-extrabold mb-6 text-center uppercase tracking-wider">Sign In / Register</h2>
+        <section id="view-auth" class="view max-w-md mx-auto w-full border-4 border-forestGreen bg-cardBg rounded-3xl p-8 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-sageGreen rounded-full opacity-30 pointer-events-none"></div>
+            <h2 class="text-4xl font-black mb-6 text-center tracking-wide">Forest Portal Sign In</h2>
             <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
                 <div>
                     <label class="block text-sm mb-1 font-bold">Name</label>
-                    <input type="text" id="authName" required class="w-full border-2 border-black dark:border-white bg-transparent p-3 focus:outline-none font-medium">
+                    <input type="text" id="authName" required class="w-full border-2 border-forestGreen bg-forestBg rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-forestBlue font-medium">
                 </div>
                 <div>
                     <label class="block text-sm mb-1 font-bold">Email</label>
-                    <input type="email" id="authEmail" required class="w-full border-2 border-black dark:border-white bg-transparent p-3 focus:outline-none font-medium">
+                    <input type="email" id="authEmail" required class="w-full border-2 border-forestGreen bg-forestBg rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-forestBlue font-medium">
                 </div>
                 <div>
                     <label class="block text-sm mb-1 font-bold">Password</label>
-                    <input type="password" id="authPassword" required class="w-full border-2 border-black dark:border-white bg-transparent p-3 focus:outline-none font-medium">
+                    <input type="password" id="authPassword" required class="w-full border-2 border-forestGreen bg-forestBg rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-forestBlue font-medium">
                 </div>
                 <div class="flex items-center space-x-2 text-sm py-2">
-                    <input type="checkbox" id="rememberMe" class="border border-black dark:border-white w-4 h-4">
-                    <label for="rememberMe">Keep sign in for next time?</label>
+                    <input type="checkbox" id="rememberMe" class="border-2 border-forestGreen w-4 h-4 rounded accent-forestGreen">
+                    <label for="rememberMe" class="font-bold">Keep sign in for next time?</label>
                 </div>
-                <button type="submit" class="w-full border-2 border-black dark:border-white py-3 font-extrabold text-lg hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition uppercase">Sign In / Register</button>
+                <button type="submit" class="w-full border-2 border-forestGreen bg-forestGreen text-white py-3 font-extrabold text-lg rounded-xl hover:bg-deepPine transition uppercase shadow-md">Sign In / Register</button>
             </form>
         </section>
 
-        <!-- 2. HOME VIEW (Larger, Filling Blocks) -->
+        <!-- 2. HOME VIEW -->
         <section id="view-home" class="view hidden space-y-8 w-full">
-            <h1 class="text-4xl font-black uppercase tracking-tight text-center mb-10">Taiya's Portal</h1>
+            <div class="text-center space-y-2">
+                <h1 class="text-5xl font-black tracking-tight">Taiya's Forest Portal</h1>
+                <p class="font-bold opacity-80 text-sm">Welcome back to your peaceful canopy sanctuary</p>
+            </div>
+
+            <!-- HOME NOTICE BOARD FOR NOTES -->
+            <div id="home-notice-board" class="space-y-3">
+                <!-- Injected live via JS if notes exist -->
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-                <button onclick="navigate('phone-time')" class="border-4 border-black dark:border-white p-12 text-2xl font-black uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center shadow-lg h-48 flex items-center justify-center">Taiya's Phone Time</button>
-                <button onclick="navigate('extra-rewards')" class="border-4 border-black dark:border-white p-12 text-2xl font-black uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center shadow-lg h-48 flex items-center justify-center">Taiya's Extra Rewards</button>
-                <button onclick="navigate('owed-credit')" class="border-4 border-black dark:border-white p-12 text-2xl font-black uppercase tracking-wider hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition text-center shadow-lg h-48 flex items-center justify-center">Taiya's Owed Credit</button>
+                <button onclick="navigate('phone-time')" class="border-4 border-forestGreen bg-cardBg p-10 text-xl font-black uppercase tracking-wider hover:bg-forestGreen hover:text-white transition text-center shadow-xl rounded-3xl h-52 flex items-center justify-center transform hover:-translate-y-1">Taiya's Phone Time</button>
+                <button onclick="navigate('extra-rewards')" class="border-4 border-forestGreen bg-cardBg p-10 text-xl font-black uppercase tracking-wider hover:bg-forestGreen hover:text-white transition text-center shadow-xl rounded-3xl h-52 flex items-center justify-center transform hover:-translate-y-1">Taiya's Extra Rewards</button>
+                <button onclick="navigate('owed-credit')" class="border-4 border-forestGreen bg-cardBg p-10 text-xl font-black uppercase tracking-wider hover:bg-forestGreen hover:text-white transition text-center shadow-xl rounded-3xl h-52 flex items-center justify-center transform hover:-translate-y-1">Taiya's Owed Credit</button>
             </div>
         </section>
 
@@ -74,39 +109,47 @@
         <section id="view-phone-time" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Taiya's Phone Time</h2>
             <!-- TIMER COMPONENT -->
-            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
                 <div class="text-5xl font-mono text-center tracking-widest font-bold" id="timer-display-phone">00:00:00</div>
                 <div class="flex justify-center space-x-2">
-                    <input type="number" id="timer-h" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <input type="number" id="timer-m" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <input type="number" id="timer-s" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <button onclick="startCustomTimer('phone')" class="border border-black dark:border-white px-6 py-2 text-sm font-bold uppercase">Start Custom</button>
+                    <input type="number" id="timer-h" min="0" max="24" placeholder="HH" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <input type="number" id="timer-m" min="0" max="59" placeholder="MM" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <input type="number" id="timer-s" min="0" max="59" placeholder="SS" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <button onclick="startCustomTimer('phone')" class="border-2 border-forestGreen bg-forestBlue text-white px-6 py-2 text-sm font-bold uppercase rounded-xl hover:opacity-90">Start Custom</button>
                 </div>
                 <!-- Quick Options -->
                 <div class="flex flex-wrap justify-center gap-3 pt-2">
-                    <button onclick="startQuickTimer(15, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">15 Mins</button>
-                    <button onclick="startQuickTimer(30, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">30 Mins</button>
-                    <button onclick="startQuickTimer(60, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour</button>
-                    <button onclick="startQuickTimer(90, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour 30 Mins</button>
-                    <button onclick="startQuickTimer(120, 'phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">2 Hours</button>
-                    <button onclick="cancelTimer('phone')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                    <button onclick="startQuickTimer(15, 'phone')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'phone')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'phone')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'phone')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'phone')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">2 Hours</button>
+                    <button onclick="cancelTimer('phone')" class="border-2 border-forestGreen bg-earthBrown text-white px-4 py-2 text-xs font-bold uppercase rounded-lg">Cancel / Re-do</button>
                 </div>
             </div>
             <!-- LIST COMPONENT -->
-            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
                 <h3 class="text-xl font-bold uppercase">Earn Time (Tasks & Reward)</h3>
-                <div id="list-container-phone" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
+                <div id="list-container-phone" class="border-2 border-forestGreen rounded-xl divide-y-2 divide-forestGreen overflow-hidden"></div>
                 <div class="space-x-2 space-y-2">
-                    <button onclick="addListRow('phone')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">+ Add Line</button>
-                    <button onclick="saveList('phone')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Save List</button>
-                    <button onclick="promptDeleteList('phone')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Delete/Clear List</button>
+                    <button onclick="addListRow('phone')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Line</button>
+                    <button onclick="saveList('phone')" class="border-2 border-forestGreen bg-forestGreen text-white px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save List</button>
+                    <button onclick="promptDeleteList('phone')" class="border-2 border-forestGreen bg-accentClay text-white px-4 py-2 text-sm font-bold uppercase rounded-xl">Delete/Clear List</button>
                 </div>
-                <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-phone">
+                <div class="border-2 border-forestGreen bg-forestBg rounded-xl p-4 mt-4 font-mono text-sm font-bold" id="status-box-phone">
                     No tasks being done right now
                 </div>
                 <button onclick="navigate('history-phone')" class="text-xs underline block mt-4 font-bold">View History</button>
             </div>
-            <div class="border border-black dark:border-white p-4">
+
+            <!-- CUTE FOREST NOTES SECTION -->
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
+                <h3 class="text-xl font-bold uppercase">Forest Notes Board</h3>
+                <div id="notes-container-phone" class="space-y-3"></div>
+                <button onclick="addNote('phone')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Note</button>
+            </div>
+
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-4 shadow-sm">
                 <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users</h4>
                 <div id="user-moderation-list" class="space-y-1 text-sm font-mono"></div>
             </div>
@@ -116,36 +159,44 @@
         <section id="view-extra-rewards" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Taiya's Extra Rewards</h2>
             <!-- TIMER COMPONENT -->
-            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
                 <div class="text-5xl font-mono text-center tracking-widest font-bold" id="timer-display-rewards">00:00:00</div>
                 <div class="flex justify-center space-x-2">
-                    <input type="number" id="timer-h-r" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <input type="number" id="timer-m-r" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <input type="number" id="timer-s-r" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <button onclick="startCustomTimer('rewards')" class="border border-black dark:border-white px-6 py-2 text-sm font-bold uppercase">Start Custom</button>
+                    <input type="number" id="timer-h-r" min="0" max="24" placeholder="HH" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <input type="number" id="timer-m-r" min="0" max="59" placeholder="MM" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <input type="number" id="timer-s-r" min="0" max="59" placeholder="SS" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <button onclick="startCustomTimer('rewards')" class="border-2 border-forestGreen bg-forestBlue text-white px-6 py-2 text-sm font-bold uppercase rounded-xl hover:opacity-90">Start Custom</button>
                 </div>
                 <div class="flex flex-wrap justify-center gap-3 pt-2">
-                    <button onclick="startQuickTimer(15, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">15 Mins</button>
-                    <button onclick="startQuickTimer(30, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">30 Mins</button>
-                    <button onclick="startQuickTimer(60, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour</button>
-                    <button onclick="startQuickTimer(90, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour 30 Mins</button>
-                    <button onclick="startQuickTimer(120, 'rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">2 Hours</button>
-                    <button onclick="cancelTimer('rewards')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                    <button onclick="startQuickTimer(15, 'rewards')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'rewards')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'rewards')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'rewards')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'rewards')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">2 Hours</button>
+                    <button onclick="cancelTimer('rewards')" class="border-2 border-forestGreen bg-earthBrown text-white px-4 py-2 text-xs font-bold uppercase rounded-lg">Cancel / Re-do</button>
                 </div>
             </div>
             <!-- LIST COMPONENT -->
-            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
                 <h3 class="text-xl font-bold uppercase">Rewards List</h3>
-                <div id="list-container-rewards" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
+                <div id="list-container-rewards" class="border-2 border-forestGreen rounded-xl divide-y-2 divide-forestGreen overflow-hidden"></div>
                 <div class="space-x-2 space-y-2">
-                    <button onclick="addListRow('rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">+ Add Line</button>
-                    <button onclick="saveList('rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Save List</button>
-                    <button onclick="promptDeleteList('rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Delete/Clear List</button>
+                    <button onclick="addListRow('rewards')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Line</button>
+                    <button onclick="saveList('rewards')" class="border-2 border-forestGreen bg-forestGreen text-white px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save List</button>
+                    <button onclick="promptDeleteList('rewards')" class="border-2 border-forestGreen bg-accentClay text-white px-4 py-2 text-sm font-bold uppercase rounded-xl">Delete/Clear List</button>
                 </div>
-                <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-rewards">No tasks being done right now</div>
+                <div class="border-2 border-forestGreen bg-forestBg rounded-xl p-4 mt-4 font-mono text-sm font-bold" id="status-box-rewards">No tasks being done right now</div>
                 <button onclick="navigate('history-rewards')" class="text-xs underline block mt-4 font-bold">View History</button>
             </div>
-            <div class="border border-black dark:border-white p-4">
+
+            <!-- CUTE FOREST NOTES SECTION -->
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
+                <h3 class="text-xl font-bold uppercase">Forest Notes Board</h3>
+                <div id="notes-container-rewards" class="space-y-3"></div>
+                <button onclick="addNote('rewards')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Note</button>
+            </div>
+
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-4 shadow-sm">
                 <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users</h4>
                 <div id="user-moderation-list-2" class="space-y-1 text-sm font-mono"></div>
             </div>
@@ -155,36 +206,44 @@
         <section id="view-owed-credit" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Taiya's Owed Credit</h2>
             <!-- TIMER COMPONENT -->
-            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
                 <div class="text-5xl font-mono text-center tracking-widest font-bold" id="timer-display-credit">00:00:00</div>
                 <div class="flex justify-center space-x-2">
-                    <input type="number" id="timer-h-c" min="0" max="24" placeholder="HH" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <input type="number" id="timer-m-c" min="0" max="59" placeholder="MM" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <input type="number" id="timer-s-c" min="0" max="59" placeholder="SS" class="border border-black dark:border-white w-20 text-center bg-transparent p-2 font-mono">
-                    <button onclick="startCustomTimer('credit')" class="border border-black dark:border-white px-6 py-2 text-sm font-bold uppercase">Start Custom</button>
+                    <input type="number" id="timer-h-c" min="0" max="24" placeholder="HH" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <input type="number" id="timer-m-c" min="0" max="59" placeholder="MM" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <input type="number" id="timer-s-c" min="0" max="59" placeholder="SS" class="border-2 border-forestGreen rounded-xl w-20 text-center bg-forestBg p-2 font-mono font-bold">
+                    <button onclick="startCustomTimer('credit')" class="border-2 border-forestGreen bg-forestBlue text-white px-6 py-2 text-sm font-bold uppercase rounded-xl hover:opacity-90">Start Custom</button>
                 </div>
                 <div class="flex flex-wrap justify-center gap-3 pt-2">
-                    <button onclick="startQuickTimer(15, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">15 Mins</button>
-                    <button onclick="startQuickTimer(30, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">30 Mins</button>
-                    <button onclick="startQuickTimer(60, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour</button>
-                    <button onclick="startQuickTimer(90, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">1 Hour 30 Mins</button>
-                    <button onclick="startQuickTimer(120, 'credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase">2 Hours</button>
-                    <button onclick="cancelTimer('credit')" class="border border-black dark:border-white px-4 py-2 text-xs font-bold uppercase bg-black text-white dark:bg-white dark:text-black">Cancel / Re-do</button>
+                    <button onclick="startQuickTimer(15, 'credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">15 Mins</button>
+                    <button onclick="startQuickTimer(30, 'credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">30 Mins</button>
+                    <button onclick="startQuickTimer(60, 'credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">1 Hour</button>
+                    <button onclick="startQuickTimer(90, 'credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">1 Hour 30 Mins</button>
+                    <button onclick="startQuickTimer(120, 'credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">2 Hours</button>
+                    <button onclick="cancelTimer('credit')" class="border-2 border-forestGreen bg-earthBrown text-white px-4 py-2 text-xs font-bold uppercase rounded-lg">Cancel / Re-do</button>
                 </div>
             </div>
             <!-- CHECKLIST COMPONENT -->
-            <div class="border-2 border-black dark:border-white p-6 space-y-4">
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
                 <h3 class="text-xl font-bold uppercase">Owed Time Checklist</h3>
-                <div id="list-container-credit" class="border border-black dark:border-white divide-y divide-black dark:divide-white"></div>
+                <div id="list-container-credit" class="border-2 border-forestGreen rounded-xl divide-y-2 divide-forestGreen overflow-hidden"></div>
                 <div class="space-x-2 space-y-2">
-                    <button onclick="addListRow('credit')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">+ Add Line</button>
-                    <button onclick="saveList('credit')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Save Checklist</button>
-                    <button onclick="promptDeleteList('credit')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Delete/Clear List</button>
+                    <button onclick="addListRow('credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Line</button>
+                    <button onclick="saveList('credit')" class="border-2 border-forestGreen bg-forestGreen text-white px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save Checklist</button>
+                    <button onclick="promptDeleteList('credit')" class="border-2 border-forestGreen bg-accentClay text-white px-4 py-2 text-sm font-bold uppercase rounded-xl">Delete/Clear List</button>
                 </div>
-                <div class="border border-black dark:border-white p-4 mt-4 font-mono text-sm" id="status-box-credit">No tasks being done right now</div>
+                <div class="border-2 border-forestGreen bg-forestBg rounded-xl p-4 mt-4 font-mono text-sm font-bold" id="status-box-credit">No tasks being done right now</div>
                 <button onclick="navigate('history-credit')" class="text-xs underline block mt-4 font-bold">View History</button>
             </div>
-            <div class="border border-black dark:border-white p-4">
+
+            <!-- CUTE FOREST NOTES SECTION -->
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
+                <h3 class="text-xl font-bold uppercase">Forest Notes Board</h3>
+                <div id="notes-container-credit" class="space-y-3"></div>
+                <button onclick="addNote('credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Note</button>
+            </div>
+
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-4 shadow-sm">
                 <h4 class="font-bold text-sm mb-2 uppercase">Logged In Users</h4>
                 <div id="user-moderation-list-3" class="space-y-1 text-sm font-mono"></div>
             </div>
@@ -193,20 +252,18 @@
         <!-- HISTORY VIEWS -->
         <section id="view-history-phone" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Phone Time History & Recovery</h2>
-            <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-phone"></div>
-            <button onclick="navigate('phone-time')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Back</button>
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md" id="history-content-phone"></div>
+            <button onclick="navigate('phone-time')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl">Back</button>
         </section>
-        
         <section id="view-history-rewards" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Rewards History & Recovery</h2>
-            <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-rewards"></div>
-            <button onclick="navigate('extra-rewards')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Back</button>
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md" id="history-content-rewards"></div>
+            <button onclick="navigate('extra-rewards')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl">Back</button>
         </section>
-        
         <section id="view-history-credit" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Credit History & Recovery</h2>
-            <div class="border-2 border-black dark:border-white p-6 space-y-4" id="history-content-credit"></div>
-            <button onclick="navigate('owed-credit')" class="border border-black dark:border-white px-4 py-2 text-sm font-bold uppercase">Back</button>
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md" id="history-content-credit"></div>
+            <button onclick="navigate('owed-credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl">Back</button>
         </section>
 
     </main>
@@ -233,7 +290,6 @@
         const db = getFirestore(app);
         const analytics = getAnalytics(app);
 
-        // Defined Admin Emails
         const ADMIN_EMAILS = ["taiyaberman4@gmail.com", "storm.rhodes@outlook.com"];
         let activeTimers = {};
         let currentUserRole = 'guest';
@@ -243,9 +299,10 @@
             const target = document.getElementById(`view-${viewName}`);
             if (target) target.classList.remove('hidden');
             if (viewName.startsWith('history-')) loadHistoryData(viewName.replace('history-', ''));
+            if (viewName === 'home') loadHomeNoticeBoard();
         };
 
-        // Authentication Handler with Admin Check
+        // Authentication Handler
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('authName').value;
@@ -280,13 +337,17 @@
 
                 const badge = document.getElementById('current-user-badge');
                 if (badge) {
-                    badge.innerHTML = currentUserRole === 'admin' ? `<span class="border border-black dark:border-white px-2 py-1">[ADMIN] ${user.email}</span>` : user.email;
+                    badge.innerHTML = currentUserRole === 'admin' ? `<span class="px-2 py-0.5 border border-forestGreen rounded bg-sageGreen font-bold">[ADMIN] ${user.email}</span>` : user.email;
                 }
 
                 loadListData('phone');
                 loadListData('rewards');
                 loadListData('credit');
+                loadNotes('phone');
+                loadNotes('rewards');
+                loadNotes('credit');
                 loadUsersList();
+                loadHomeNoticeBoard();
             } else {
                 currentUserRole = 'guest';
                 navigate('auth');
@@ -336,20 +397,20 @@
             document.getElementById(`timer-display-${pageKey}`).innerText = "00:00:00";
         };
 
-        // Dynamic Lists & Tasks (Fully open editing for everyone)
+        // Dynamic Lists & Tasks
         window.addListRow = function(pageKey, taskText = '', rewardText = '', completed = false) {
             const container = document.getElementById(`list-container-${pageKey}`);
             const row = document.createElement('div');
-            row.className = `flex items-center justify-between p-3 ${completed ? 'bg-gray-300 dark:bg-gray-800 text-gray-500' : ''}`;
+            row.className = `flex items-center justify-between p-3 ${completed ? 'bg-gray-200 text-gray-500' : 'bg-cardBg'}`;
             row.innerHTML = `
                 <div class="flex items-center space-x-3 w-full">
-                    ${pageKey === 'credit' ? `<input type="checkbox" class="task-check w-5 h-5" ${completed ? 'checked' : ''}>` : '<span class="bullet font-bold">•</span>'}
-                    <input type="text" value="${taskText}" placeholder="Task description" class="task-input bg-transparent border-b-2 border-black dark:border-white w-1/2 p-2 font-medium">
-                    <input type="text" value="${rewardText}" placeholder="Reward / Owed Time" class="reward-input bg-transparent border-b-2 border-black dark:border-white w-1/3 p-2 font-medium">
+                    ${pageKey === 'credit' ? `<input type="checkbox" class="task-check w-5 h-5 rounded accent-forestGreen" ${completed ? 'checked' : ''}>` : '<span class="bullet font-bold">•</span>'}
+                    <input type="text" value="${taskText}" placeholder="Task description" class="task-input bg-transparent border-b-2 border-forestGreen w-1/2 p-2 font-medium focus:outline-none">
+                    <input type="text" value="${rewardText}" placeholder="Reward / Owed Time" class="reward-input bg-transparent border-b-2 border-forestGreen w-1/3 p-2 font-medium focus:outline-none">
                 </div>
                 <div class="flex space-x-2">
-                    <button onclick="startTask(this, '${pageKey}')" class="border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Start</button>
-                    <button onclick="deleteRow(this)" class="border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Delete</button>
+                    <button onclick="startTask(this, '${pageKey}')" class="border-2 border-forestGreen bg-forestBg px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">Start</button>
+                    <button onclick="deleteRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Delete</button>
                 </div>
             `;
             container.appendChild(row);
@@ -364,7 +425,7 @@
             const taskInput = row.querySelector('.task-input').value;
             document.getElementById(`status-box-${pageKey}`).innerHTML = `
                 <div>Task in process: <strong>${taskInput}</strong></div>
-                <button onclick="completeTask(this, '${pageKey}')" class="mt-2 border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Complete?</button>
+                <button onclick="completeTask(this, '${pageKey}')" class="mt-2 border-2 border-forestGreen bg-forestBg px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">Complete?</button>
             `;
         };
 
@@ -394,6 +455,94 @@
             }
         }
 
+        // --- NEW FOREST NOTES SYSTEM ---
+        window.addNote = function(pageKey, text = '') {
+            const container = document.getElementById(`notes-container-${pageKey}`);
+            const noteDiv = document.createElement('div');
+            noteDiv.className = "border-2 border-forestGreen bg-[#f9fbf8] p-4 rounded-xl flex flex-col space-y-2 shadow-sm note-item";
+            noteDiv.innerHTML = `
+                <textarea placeholder="Write a cute note or message here..." class="note-textarea w-full bg-transparent border border-forestGreen/40 rounded-lg p-2 font-medium focus:outline-none focus:ring-1 focus:ring-forestGreen resize-y min-h-[70px]">${text}</textarea>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="saveNotes('${pageKey}')" class="border-2 border-forestGreen bg-forestGreen text-white px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-deepPine">Save</button>
+                    <button onclick="deleteNoteEl(this, '${pageKey}')" class="border-2 border-forestGreen bg-accentClay text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Delete</button>
+                </div>
+            `;
+            container.appendChild(noteDiv);
+        };
+
+        window.deleteNoteEl = async function(btn, pageKey) {
+            btn.closest('.note-item').remove();
+            await window.saveNotes(pageKey);
+        };
+
+        window.saveNotes = async function(pageKey) {
+            const container = document.getElementById(`notes-container-${pageKey}`);
+            const textareas = container.querySelectorAll('.note-textarea');
+            const notesData = Array.from(textareas).map(ta => ta.value).filter(val => val.trim() !== '');
+            await setDoc(doc(db, "notes", pageKey), { notes: notesData });
+            alert("Notes saved successfully!");
+            loadHomeNoticeBoard();
+        };
+
+        async function loadNotes(pageKey) {
+            const snap = await getDoc(doc(db, "notes", pageKey));
+            const container = document.getElementById(`notes-container-${pageKey}`);
+            container.innerHTML = '';
+            if (snap.exists() && snap.data().notes && snap.data().notes.length > 0) {
+                snap.data().notes.forEach(noteText => window.addNote(pageKey, noteText));
+            } else {
+                container.innerHTML = '<div class="p-3 text-xs opacity-70 italic">No notes yet. Click "+ Add Note" to leave one!</div>';
+            }
+        }
+
+        async function loadHomeNoticeBoard() {
+            const board = document.getElementById('home-notice-board');
+            if (!board) return;
+            board.innerHTML = '';
+
+            const pages = [
+                { key: 'phone', name: "Taiya's Phone Time", view: 'phone-time' },
+                { key: 'rewards', name: "Taiya's Extra Rewards", view: 'extra-rewards' },
+                { key: 'credit', name: "Taiya's Owed Credit", view: 'owed-credit' }
+            ];
+
+            let hasNotes = false;
+
+            for (const p of pages) {
+                try {
+                    const snap = await getDoc(doc(db, "notes", p.key));
+                    if (snap.exists() && snap.data().notes && snap.data().notes.length > 0) {
+                        hasNotes = true;
+                        snap.data().notes.forEach((noteText, idx) => {
+                            const notice = document.createElement('div');
+                            notice.className = "border-2 border-forestGreen bg-[#eaf2ed] p-4 rounded-2xl flex items-center justify-between shadow-md";
+                            notice.innerHTML = `
+                                <div class="flex items-center space-x-3 overflow-hidden">
+                                    <span class="text-xl">🌿</span>
+                                    <div>
+                                        <span class="text-xs font-bold uppercase tracking-wider bg-sageGreen px-2 py-0.5 rounded border border-forestGreen/30">${p.name} Note</span>
+                                        <p class="font-bold truncate max-w-xl mt-1 text-sm">"${noteText}"</p>
+                                    </div>
+                                </div>
+                                <button onclick="navigate('${p.view}')" class="border-2 border-forestGreen bg-forestBlue text-white px-4 py-2 text-xs font-bold uppercase rounded-xl hover:opacity-90 whitespace-nowrap shadow-sm">View Note</button>
+                            `;
+                            board.appendChild(notice);
+                        });
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            if (!hasNotes) {
+                board.innerHTML = `
+                    <div class="border-2 border-dashed border-forestGreen/40 bg-cardBg/60 p-6 rounded-2xl text-center">
+                        <p class="text-sm font-bold opacity-70">No forest notes posted yet. Check any portal section to add one!</p>
+                    </div>
+                `;
+            }
+        }
+
         window.promptDeleteList = async function(pageKey) {
             if (confirm("By deleting this, this will clear the whole list, not delete the list. You can recover this in your history.")) {
                 const snap = await getDoc(doc(db, "lists", pageKey));
@@ -408,22 +557,27 @@
 
         async function loadHistoryData(pageKey) {
             const container = document.getElementById(`history-content-${pageKey}`);
-            container.innerHTML = '<p>Loading history...</p>';
+            container.innerHTML = '<p class="font-bold">Loading history...</p>';
             const snap = await getDocs(collection(db, "history"));
             container.innerHTML = '';
+            let count = 0;
             snap.forEach(docSnap => {
                 const h = docSnap.data();
                 if (h.pageKey === pageKey) {
+                    count++;
                     const div = document.createElement('div');
-                    div.className = "border border-black dark:border-white p-4 mb-3 flex justify-between items-center";
-                    div.innerHTML = `<div><span class="text-xs opacity-70 font-mono">${h.timestamp}</span><p class="font-bold">${h.items.length} items cleared</p></div>
+                    div.className = "border-2 border-forestGreen bg-forestBg p-4 mb-3 flex justify-between items-center rounded-xl";
+                    div.innerHTML = `<div><span class="text-xs opacity-70 font-mono font-bold">${h.timestamp}</span><p class="font-bold">${h.items.length} items cleared</p></div>
                         <div class="space-x-2">
-                            <button onclick="recoverHistory('${docSnap.id}', '${pageKey}')" class="border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Recover</button>
-                            <button onclick="deleteHistory('${docSnap.id}', '${pageKey}')" class="border border-black dark:border-white px-3 py-1 text-xs font-bold uppercase">Delete</button>
+                            <button onclick="recoverHistory('${docSnap.id}', '${pageKey}')" class="border-2 border-forestGreen bg-cardBg px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-sageGreen">Recover</button>
+                            <button onclick="deleteHistory('${docSnap.id}', '${pageKey}')" class="border-2 border-forestGreen bg-accentClay text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Delete</button>
                         </div>`;
                     container.appendChild(div);
                 }
             });
+            if (count === 0) {
+                container.innerHTML = '<p class="font-bold opacity-70">No history records found.</p>';
+            }
         }
 
         window.recoverHistory = async function(historyId, pageKey) {
@@ -451,8 +605,8 @@
                     const u = docSnap.data();
                     const isAdmin = ADMIN_EMAILS.includes(u.email?.toLowerCase()) || u.role === 'admin';
                     const row = document.createElement('div');
-                    row.className = "flex justify-between items-center py-1";
-                    row.innerHTML = `<span>${u.name} (${u.email}) ${isAdmin ? '<strong class="ml-2 px-1 border border-black dark:border-white text-xs">ADMIN</strong>' : ''}</span>`;
+                    row.className = "flex justify-between items-center py-1 font-bold";
+                    row.innerHTML = `<span>${u.name} (${u.email}) ${isAdmin ? '<strong class="ml-2 px-2 py-0.5 border border-forestGreen bg-sageGreen text-xs rounded">ADMIN</strong>' : ''}</span>`;
                     el.appendChild(row);
                 });
             });
