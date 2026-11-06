@@ -242,8 +242,8 @@
             <!-- ACTIVE OWED TIME TABLE -->
             <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold uppercase">Owed Time</h3>
-                    <button onclick="addCreditActiveRow()" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Line</button>
+                    <h3 class="text-xl font-bold uppercase">Active Owed Time Table</h3>
+                    <button onclick="addCreditActiveRow()" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Active Line</button>
                 </div>
                 
                 <div class="overflow-x-auto border-2 border-forestGreen rounded-xl">
@@ -263,7 +263,7 @@
                 </div>
                 
                 <div class="flex space-x-2 pt-2">
-                    <button onclick="saveCreditActiveTable()" class="border-2 border-forestGreen bg-forestGreen text-white px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save Table</button>
+                    <button onclick="saveCreditActiveTable()" class="border-2 border-forestGreen bg-forestGreen text-white px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save Active Table</button>
                 </div>
             </div>
 
@@ -327,8 +327,8 @@
     <div id="task-completion-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
         <div class="border-4 border-forestGreen bg-cardBg rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
             <h3 class="text-2xl font-black uppercase">Task Completed</h3>
-            <p class="text-sm font-bold">Type what task completed to work off the owed time:</p>
-            <input type="text" id="completed-task-input" class="w-full border-2 border-forestGreen bg-forestBg rounded-xl p-3 font-medium focus:outline-none">
+            <p class="text-sm font-bold">Type what task you completed to work off the owed time:</p>
+            <input type="text" id="completed-task-input" placeholder="e.g. Taiya packed Back Dishwasher" class="w-full border-2 border-forestGreen bg-forestBg rounded-xl p-3 font-medium focus:outline-none">
             <div class="flex justify-end space-x-2 pt-2">
                 <button onclick="closeCompletionModal()" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl">Cancel</button>
                 <button onclick="confirmTaskCompletion()" class="border-2 border-forestGreen bg-forestGreen text-white px-5 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save</button>
@@ -580,15 +580,15 @@
             }
         }
 
-        // --- NEW OWED CREDIT TABLE SYSTEM (Matching Notebook Design) ---
-        window.addCreditActiveRow = function(date = '1 NOV', owedTime = '30 mins', timeStarted = '8:00-8:30', isSaved = false) {
+        // --- NEW OWED CREDIT TABLE SYSTEM (Default rows are empty) ---
+        window.addCreditActiveRow = function(date = '', owedTime = '', timeStarted = '', isSaved = false) {
             const tbody = document.getElementById('credit-active-tbody');
             const tr = document.createElement('tr');
             tr.className = "credit-active-row hover:bg-forestBg/50 transition";
             tr.innerHTML = `
-                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${date}" class="c-date bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
-                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${owedTime}" class="c-owed bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
-                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${timeStarted}" class="c-started bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${date}" placeholder="e.g. 1 NOV" class="c-date bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${owedTime}" placeholder="e.g. 30 mins" class="c-owed bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${timeStarted}" placeholder="e.g. 8:00-8:30" class="c-started bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
                 <td class="p-3 text-center space-x-1 credit-controls">
                     ${isSaved ? `
                         <button onclick="promptCompleteCredit(this)" class="border-2 border-forestGreen bg-sageGreen px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-forestGreen hover:text-white">Complete</button>
@@ -660,7 +660,7 @@
             closeCompletionModal();
         };
 
-        window.addCreditCompletedRow = function(date = '2 NOV', owedBackTime = '30 mins', taskCompleted = '', isSaved = false) {
+        window.addCreditCompletedRow = function(date = '', owedBackTime = '', taskCompleted = '', isSaved = false) {
             const tbody = document.getElementById('credit-completed-tbody');
             const tr = document.createElement('tr');
             tr.className = "credit-completed-row hover:bg-forestBg/50 transition";
@@ -707,8 +707,6 @@
             activeTbody.innerHTML = '';
             if (activeSnap.exists() && activeSnap.data().items && activeSnap.data().items.length > 0) {
                 activeSnap.data().items.forEach(i => window.addCreditActiveRow(i.date, i.owedTime, i.timeStarted, true));
-            } else {
-                window.addCreditActiveRow('1 NOV', '30 mins', '8:00-8:30', true);
             }
 
             // Load Completed
@@ -888,10 +886,10 @@
             if (popup) {
                 popup.classList.toggle('hidden');
                 const quotes = [
-                "composure.", 
+                    "Take a deep breath and stretch like a koala in a gum tree!",
                     "You're making wonderful progress today!",
-                    "Listen to some music.",
-                    "If it does not challenge you, It does not change you.",
+                    "Pause for a quick water break—stay refreshed!",
+                    "Every checked task brings you closer to your goals!"
                 ];
                 document.getElementById('mystery-quote').innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
             }
