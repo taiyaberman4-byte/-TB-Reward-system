@@ -216,9 +216,10 @@
             </div>
         </section>
 
-        <!-- 5. TAIYA'S OWED CREDIT VIEW -->
+        <!-- 5. TAIYA'S OWED CREDIT VIEW (REDESIGNED TO MATCH NOTEBOOK SYSTEM) -->
         <section id="view-owed-credit" class="view hidden space-y-6">
             <h2 class="text-3xl font-black uppercase">Owed Credit</h2>
+            
             <!-- TIMER COMPONENT -->
             <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
                 <div class="text-5xl font-mono text-center tracking-widest font-bold" id="timer-display-credit">00:00:00</div>
@@ -237,17 +238,54 @@
                     <button onclick="cancelTimer('credit')" class="border-2 border-forestGreen bg-earthBrown text-white px-4 py-2 text-xs font-bold uppercase rounded-lg">Cancel / Re-do</button>
                 </div>
             </div>
-            <!-- CHECKLIST COMPONENT -->
+
+            <!-- ACTIVE OWED TIME TABLE -->
             <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
-                <h3 class="text-xl font-bold uppercase">Owed Time Checklist</h3>
-                <div id="list-container-credit" class="border-2 border-forestGreen rounded-xl divide-y-2 divide-forestGreen overflow-hidden"></div>
-                <div class="space-x-2 space-y-2">
-                    <button onclick="addListRow('credit')" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Line</button>
-                    <button onclick="saveList('credit')" class="border-2 border-forestGreen bg-forestGreen text-white px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save Checklist</button>
-                    <button onclick="promptDeleteList('credit')" class="border-2 border-forestGreen bg-accentClay text-white px-4 py-2 text-sm font-bold uppercase rounded-xl">Delete/Clear List</button>
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold uppercase">Active Owed Time Table</h3>
+                    <button onclick="addCreditActiveRow()" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-xs font-bold uppercase rounded-xl hover:bg-sageGreen">+ Add Active Line</button>
                 </div>
-                <div class="border-2 border-forestGreen bg-forestBg rounded-xl p-4 mt-4 font-mono text-sm font-bold" id="status-box-credit">No tasks being done right now</div>
-                <button onclick="navigate('history-credit')" class="text-xs underline block mt-4 font-bold">View History</button>
+                
+                <div class="overflow-x-auto border-2 border-forestGreen rounded-xl">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-forestBg border-b-2 border-forestGreen text-xs uppercase font-mono">
+                                <th class="p-3 border-r-2 border-forestGreen">Date</th>
+                                <th class="p-3 border-r-2 border-forestGreen">Owed Time</th>
+                                <th class="p-3 border-r-2 border-forestGreen">Time Started</th>
+                                <th class="p-3 text-center">Edit / Complete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="credit-active-tbody" class="divide-y-2 divide-forestGreen">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="flex space-x-2 pt-2">
+                    <button onclick="saveCreditActiveTable()" class="border-2 border-forestGreen bg-forestGreen text-white px-4 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save Active Table</button>
+                </div>
+            </div>
+
+            <!-- COMPLETED TASKS BOX -->
+            <div class="border-2 border-forestGreen bg-cardBg rounded-2xl p-6 space-y-4 shadow-md">
+                <h3 class="text-xl font-bold uppercase">Completed Tasks (Worked Off Time)</h3>
+                
+                <div class="overflow-x-auto border-2 border-forestGreen rounded-xl">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-sageGreen/30 border-b-2 border-forestGreen text-xs uppercase font-mono">
+                                <th class="p-3 border-r-2 border-forestGreen">Date</th>
+                                <th class="p-3 border-r-2 border-forestGreen">Owed Back Time</th>
+                                <th class="p-3 border-r-2 border-forestGreen">Task Completed</th>
+                                <th class="p-3 text-center">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="credit-completed-tbody" class="divide-y-2 divide-forestGreen">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- NOTES SECTION -->
@@ -285,6 +323,19 @@
 
     </main>
 
+    <!-- TASK COMPLETION MODAL POPUP -->
+    <div id="task-completion-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div class="border-4 border-forestGreen bg-cardBg rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 class="text-2xl font-black uppercase">Task Completed</h3>
+            <p class="text-sm font-bold">Type what task you completed to work off the owed time:</p>
+            <input type="text" id="completed-task-input" placeholder="e.g. Taiya packed Back Dishwasher" class="w-full border-2 border-forestGreen bg-forestBg rounded-xl p-3 font-medium focus:outline-none">
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeCompletionModal()" class="border-2 border-forestGreen bg-forestBg px-4 py-2 text-sm font-bold uppercase rounded-xl">Cancel</button>
+                <button onclick="confirmTaskCompletion()" class="border-2 border-forestGreen bg-forestGreen text-white px-5 py-2 text-sm font-bold uppercase rounded-xl hover:bg-deepPine">Save</button>
+            </div>
+        </div>
+    </div>
+
     <!-- FIREBASE & APP LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -312,6 +363,7 @@
         let currentUserRole = 'guest';
         let currentUserName = 'User';
         let activeTaskRow = null;
+        let rowPendingCompletion = null;
 
         window.navigate = function(viewName) {
             document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
@@ -365,7 +417,7 @@
 
                 loadListData('phone');
                 loadListData('rewards');
-                loadListData('credit');
+                loadCreditTables();
                 loadNotes('phone');
                 loadNotes('rewards');
                 loadNotes('credit');
@@ -421,7 +473,7 @@
             document.getElementById(`timer-display-${pageKey}`).innerText = "00:00:00";
         };
 
-        // --- DYNAMIC LOCKABLE TASKS SYSTEM ---
+        // --- DYNAMIC LOCKABLE TASKS SYSTEM (Phone & Rewards) ---
         window.addListRow = function(pageKey, taskText = '', rewardText = '', completed = false, isSaved = false) {
             const container = document.getElementById(`list-container-${pageKey}`);
             const row = document.createElement('div');
@@ -430,7 +482,7 @@
             row.innerHTML = `
                 ${completed ? '<div class="absolute inset-0 flex items-center justify-center font-black text-xs uppercase tracking-widest text-forestGreen bg-sageGreen/30 border border-forestGreen/30 rounded">COMPLETED</div>' : ''}
                 <div class="flex items-center space-x-3 w-full ${completed ? 'pointer-events-none' : ''}">
-                    ${pageKey === 'credit' ? `<input type="checkbox" class="task-check w-5 h-5 rounded accent-forestGreen" ${completed ? 'checked' : ''} ${isSaved ? 'disabled' : ''}>` : '<span class="bullet font-bold">•</span>'}
+                    <span class="bullet font-bold">•</span>
                     <input type="text" value="${taskText}" placeholder="Task description" class="task-input bg-transparent border-b-2 border-forestGreen w-1/2 p-2 font-medium focus:outline-none" ${isSaved ? 'readonly disabled' : ''}>
                     <input type="text" value="${rewardText}" placeholder="Reward / Owed Time" class="reward-input bg-transparent border-b-2 border-forestGreen w-1/3 p-2 font-medium focus:outline-none" ${isSaved ? 'readonly disabled' : ''}>
                 </div>
@@ -495,10 +547,6 @@
                 const innerDiv = activeTaskRow.querySelector('.flex.items-center.space-x-3');
                 if (innerDiv) innerDiv.classList.add('pointer-events-none');
                 
-                const checkbox = activeTaskRow.querySelector('.task-check');
-                if (checkbox) checkbox.checked = true;
-
-                // Add COMPLETED banner overlay
                 const badge = document.createElement('div');
                 badge.className = 'absolute inset-0 flex items-center justify-center font-black text-xs uppercase tracking-widest text-forestGreen bg-sageGreen/30 border border-forestGreen/30 rounded';
                 badge.innerText = 'COMPLETED';
@@ -515,7 +563,7 @@
             const data = Array.from(rows).map(r => ({
                 task: r.querySelector('.task-input')?.value || '',
                 reward: r.querySelector('.reward-input')?.value || '',
-                completed: r.classList.contains('line-through') || r.querySelector('.task-check')?.checked || false
+                completed: r.classList.contains('line-through') || false
             }));
             await setDoc(doc(db, "lists", pageKey), { items: data });
             alert("List saved successfully!");
@@ -529,6 +577,146 @@
                 snap.data().items.forEach(i => addListRow(pageKey, i.task, i.reward, i.completed, true));
             } else {
                 container.innerHTML = '<div class="p-4 text-sm opacity-70">No items on the list right now. Click "+ Add Line" below to add tasks!</div>';
+            }
+        }
+
+        // --- NEW OWED CREDIT TABLE SYSTEM (Matching Notebook Design) ---
+        window.addCreditActiveRow = function(date = '1 NOV', owedTime = '30 mins', timeStarted = '8:00-8:30', isSaved = false) {
+            const tbody = document.getElementById('credit-active-tbody');
+            const tr = document.createElement('tr');
+            tr.className = "credit-active-row hover:bg-forestBg/50 transition";
+            tr.innerHTML = `
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${date}" class="c-date bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${owedTime}" class="c-owed bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${timeStarted}" class="c-started bg-transparent w-full focus:outline-none font-medium" ${isSaved ? 'readonly disabled' : ''}></td>
+                <td class="p-3 text-center space-x-1 credit-controls">
+                    ${isSaved ? `
+                        <button onclick="promptCompleteCredit(this)" class="border-2 border-forestGreen bg-sageGreen px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-forestGreen hover:text-white">Complete</button>
+                        <button onclick="enableCreditEdit(this)" class="border-2 border-forestGreen bg-forestBg px-2 py-1 text-xs font-bold rounded-lg hover:bg-sageGreen" title="Edit">✏️</button>
+                        <button onclick="deleteCreditRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-2 py-1 text-xs font-bold rounded-lg">✕</button>
+                    ` : `
+                        <button onclick="saveSingleCreditActive(this)" class="border-2 border-forestGreen bg-forestGreen text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Save</button>
+                        <button onclick="deleteCreditRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-2 py-1 text-xs font-bold rounded-lg">Delete</button>
+                    `}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        };
+
+        window.enableCreditEdit = function(btn) {
+            const tr = btn.closest('tr');
+            tr.querySelectorAll('input').forEach(i => { i.removeAttribute('readonly'); i.removeAttribute('disabled'); });
+            const controls = tr.querySelector('.credit-controls');
+            controls.innerHTML = `
+                <button onclick="saveSingleCreditActive(this)" class="border-2 border-forestGreen bg-forestGreen text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Save</button>
+                <button onclick="deleteCreditRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-2 py-1 text-xs font-bold rounded-lg">Delete</button>
+            `;
+        };
+
+        window.saveSingleCreditActive = function(btn) {
+            const tr = btn.closest('tr');
+            tr.querySelectorAll('input').forEach(i => { i.setAttribute('readonly', 'true'); i.setAttribute('disabled', 'true'); });
+            const controls = tr.querySelector('.credit-controls');
+            controls.innerHTML = `
+                <button onclick="promptCompleteCredit(this)" class="border-2 border-forestGreen bg-sageGreen px-3 py-1 text-xs font-bold uppercase rounded-lg hover:bg-forestGreen hover:text-white">Complete</button>
+                <button onclick="enableCreditEdit(this)" class="border-2 border-forestGreen bg-forestBg px-2 py-1 text-xs font-bold rounded-lg hover:bg-sageGreen" title="Edit">✏️</button>
+                <button onclick="deleteCreditRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-2 py-1 text-xs font-bold rounded-lg">✕</button>
+            `;
+            saveCreditActiveTable();
+        };
+
+        window.deleteCreditRow = function(btn) {
+            btn.closest('tr').remove();
+            saveCreditActiveTable();
+        };
+
+        window.promptCompleteCredit = function(btn) {
+            rowPendingCompletion = btn.closest('tr');
+            document.getElementById('completed-task-input').value = '';
+            document.getElementById('task-completion-modal').classList.remove('hidden');
+        };
+
+        window.closeCompletionModal = function() {
+            document.getElementById('task-completion-modal').classList.add('hidden');
+            rowPendingCompletion = null;
+        };
+
+        window.confirmTaskCompletion = async function() {
+            const taskText = document.getElementById('completed-task-input').value.trim();
+            if (!taskText) { alert("Please type what task was completed."); return; }
+
+            if (rowPendingCompletion) {
+                const date = rowPendingCompletion.querySelector('.c-date').value;
+                const owedTime = rowPendingCompletion.querySelector('.c-owed').value;
+
+                // Remove from active table
+                rowPendingCompletion.remove();
+                await saveCreditActiveTable();
+
+                // Add to completed table box
+                addCreditCompletedRow(date, owedTime, taskText, true);
+                await saveCreditCompletedTable();
+            }
+            closeCompletionModal();
+        };
+
+        window.addCreditCompletedRow = function(date = '2 NOV', owedBackTime = '30 mins', taskCompleted = '', isSaved = false) {
+            const tbody = document.getElementById('credit-completed-tbody');
+            const tr = document.createElement('tr');
+            tr.className = "credit-completed-row hover:bg-forestBg/50 transition";
+            tr.innerHTML = `
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${date}" class="cc-date bg-transparent w-full focus:outline-none font-medium" readonly disabled></td>
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${owedBackTime}" class="cc-owed bg-transparent w-full focus:outline-none font-medium" readonly disabled></td>
+                <td class="p-3 border-r-2 border-forestGreen"><input type="text" value="${taskCompleted}" class="cc-task bg-transparent w-full focus:outline-none font-medium" readonly disabled></td>
+                <td class="p-3 text-center">
+                    <button onclick="deleteCompletedCreditRow(this)" class="border-2 border-forestGreen bg-accentClay text-white px-3 py-1 text-xs font-bold uppercase rounded-lg">Delete</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        };
+
+        window.deleteCompletedCreditRow = async function(btn) {
+            btn.closest('tr').remove();
+            await saveCreditCompletedTable();
+        };
+
+        window.saveCreditActiveTable = async function() {
+            const rows = document.querySelectorAll('#credit-active-tbody tr');
+            const data = Array.from(rows).map(r => ({
+                date: r.querySelector('.c-date')?.value || '',
+                owedTime: r.querySelector('.c-owed')?.value || '',
+                timeStarted: r.querySelector('.c-started')?.value || ''
+            }));
+            await setDoc(doc(db, "lists", "credit_active"), { items: data });
+        };
+
+        window.saveCreditCompletedTable = async function() {
+            const rows = document.querySelectorAll('#credit-completed-tbody tr');
+            const data = Array.from(rows).map(r => ({
+                date: r.querySelector('.cc-date')?.value || '',
+                owedBackTime: r.querySelector('.cc-owed')?.value || '',
+                taskCompleted: r.querySelector('.cc-task')?.value || ''
+            }));
+            await setDoc(doc(db, "lists", "credit_completed"), { items: data });
+        };
+
+        async function loadCreditTables() {
+            // Load Active
+            const activeSnap = await getDoc(doc(db, "lists", "credit_active"));
+            const activeTbody = document.getElementById('credit-active-tbody');
+            activeTbody.innerHTML = '';
+            if (activeSnap.exists() && activeSnap.data().items && activeSnap.data().items.length > 0) {
+                activeSnap.data().items.forEach(i => window.addCreditActiveRow(i.date, i.owedTime, i.timeStarted, true));
+            } else {
+                window.addCreditActiveRow('1 NOV', '30 mins', '8:00-8:30', true);
+            }
+
+            // Load Completed
+            const compSnap = await getDoc(doc(db, "lists", "credit_completed"));
+            const compTbody = document.getElementById('credit-completed-tbody');
+            compTbody.innerHTML = '';
+            if (compSnap.exists() && compSnap.data().items && compSnap.data().items.length > 0) {
+                compSnap.data().items.forEach(i => window.addCreditCompletedRow(i.date, i.owedBackTime, i.taskCompleted, true));
             }
         }
 
